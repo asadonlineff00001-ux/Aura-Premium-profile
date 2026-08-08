@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "routes": [
-    { "src": "/data.json",  "dest": "/data.json"  },
-    { "src": "/deco/(.*)", "dest": "/deco/$1"     },
-    { "src": "/(.*)",      "dest": "/tuzhicodes.html" }
-  ]
-}
