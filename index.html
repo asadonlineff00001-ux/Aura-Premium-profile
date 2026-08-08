@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aura Zone | Gaming Support</title>
+<meta name="description" content="Connect with Aura Zone for Free Fire gaming support, WhatsApp, Discord, community and gaming assistance.">
+<meta property="og:title" content="Aura Zone | Gaming Support">
+<meta property="og:description" content="Connect with Aura Zone for Free Fire gaming support, WhatsApp, Discord, community and gaming assistance.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#05060d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg-0:#05060d;
+  --bg-1:#0a0d1c;
+  --bg-2:#0e1228;
+  --panel: rgba(18,22,44,0.55);
+  --panel-border: rgba(139,124,255,0.22);
+  --violet:#8b5cf6;
+  --violet-2:#a78bfa;
+  --cyan:#22e2f5;
+  --cyan-dim:#1aa8b8;
+  --lime:#adff2f;
+  --danger:#ff4d6d;
+  --warn:#ffb020;
+  --text-0:#eef0ff;
+  --text-1:#aab0d6;
+  --text-2:#6c7299;
+  --grad-main: linear-gradient(115deg,var(--violet) 0%,#6d5ef0 32%,var(--cyan) 100%);
+  --font-display:'Orbitron',sans-serif;
+  --font-body:'Rajdhani',sans-serif;
+  --radius:14px;
+  --ease:cubic-bezier(.16,.84,.44,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto;}
+  *{animation-duration:0.01ms !important;animation-iteration-count:1 !important;transition-duration:0.01ms !important;}
+}
+body{
+  background:var(--bg-0);
+  color:var(--text-0);
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.5;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input,select,textarea{font-family:inherit;color:inherit;}
+::selection{background:var(--violet);color:#fff;}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+h1,h2,h3{font-family:var(--font-display);letter-spacing:0.02em;}
+.eyebrow{
+  font-family:var(--font-display);
+  font-size:11px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:var(--cyan);
+}
+.grad-text{
+  background:var(--grad-main);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+::-webkit-scrollbar{width:9px;}
+::-webkit-scrollbar-track{background:var(--bg-0);}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--violet),var(--cyan));border-radius:8px;}
+
+/* Background scanline/grid texture, ambient across the page */
+.bg-fixed{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 500px at 15% -5%, rgba(139,92,246,0.20), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 10%, rgba(34,226,245,0.14), transparent 60%),
+    radial-gradient(ellipse 800px 600px at 50% 100%, rgba(139,92,246,0.12), transparent 60%);
+}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.35;
+  background-image:
+    linear-gradient(rgba(139,124,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,124,255,0.06) 1px, transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(ellipse 90% 65% at 50% 0%, black 40%, transparent 100%);
+}
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ============ LOADER ============ */
+#loader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg-0);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  transition:opacity .6s var(--ease), visibility .6s var(--ease);
+}
+#loader.hide{opacity:0;visibility:hidden;}
+.loader-mark{
+  font-family:var(--font-display);font-weight:900;font-size:clamp(32px,7vw,56px);
+  letter-spacing:0.08em;
+  background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 26px rgba(139,92,246,0.55));
+  animation:pulseGlow 1.8s ease-in-out infinite;
+}
+@keyframes pulseGlow{
+  0%,100%{filter:drop-shadow(0 0 18px rgba(139,92,246,.4));}
+  50%{filter:drop-shadow(0 0 34px rgba(34,226,245,.55));}
+}
+.loader-sub{
+  font-family:var(--font-display);font-size:11px;letter-spacing:0.3em;color:var(--text-1);
+}
+.loader-bar-track{
+  width:min(280px,70vw);height:3px;background:rgba(139,124,255,0.15);border-radius:4px;overflow:hidden;
+}
+.loader-bar-fill{
+  height:100%;width:0%;background:var(--grad-main);border-radius:4px;
+  box-shadow:0 0 12px var(--violet);
+}
+.loader-pct{font-family:var(--font-display);font-size:12px;color:var(--cyan);letter-spacing:0.1em;}
+
+/* ============ NAV ============ */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:16px 0;
+  transition:background .35s var(--ease), backdrop-filter .35s var(--ease), border-color .35s var(--ease), padding .35s var(--ease);
+  border-bottom:1px solid transparent;
+}
+header.scrolled{
+  background:rgba(6,8,18,0.72);
+  backdrop-filter:blur(16px) saturate(140%);
+  -webkit-backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid rgba(139,124,255,0.16);
+  padding:11px 0;
+}
+.navrow{display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.logo{
+  font-family:var(--font-display);font-weight:800;font-size:19px;letter-spacing:0.08em;
+  display:flex;align-items:center;gap:9px;
+}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:blink 2s ease-in-out infinite;flex:none;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+nav.navlinks{display:flex;gap:34px;}
+nav.navlinks a{
+  font-family:var(--font-display);font-size:12px;letter-spacing:0.14em;color:var(--text-1);
+  position:relative;padding:6px 0;transition:color .25s var(--ease);
+}
+nav.navlinks a::after{
+  content:'';position:absolute;left:0;bottom:0;height:1px;width:0;background:var(--grad-main);
+  transition:width .3s var(--ease);
+}
+nav.navlinks a:hover{color:var(--text-0);}
+nav.navlinks a:hover::after{width:100%;}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--font-display);font-size:12.5px;letter-spacing:0.09em;font-weight:600;
+  padding:12px 24px;border-radius:9px;position:relative;overflow:hidden;white-space:nowrap;
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), filter .25s var(--ease);
+}
+.btn:active{transform:scale(0.97);}
+.btn-primary{
+  background:var(--grad-main);color:#08040f;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.08) inset, 0 8px 26px -8px rgba(139,92,246,0.65);
+}
+.btn-primary:hover{box-shadow:0 0 0 1px rgba(255,255,255,0.14) inset, 0 10px 34px -6px rgba(34,226,245,0.55);transform:translateY(-2px);}
+.btn-ghost{
+  background:rgba(139,124,255,0.06);color:var(--text-0);
+  border:1px solid var(--panel-border);
+}
+.btn-ghost:hover{background:rgba(139,124,255,0.14);border-color:rgba(139,124,255,0.5);transform:translateY(-2px);}
+.btn-block{width:100%;}
+.hamburger{display:none;flex-direction:column;gap:5px;width:26px;z-index:600;}
+.hamburger span{height:2px;width:100%;background:var(--text-0);border-radius:2px;transition:transform .3s var(--ease), opacity .3s var(--ease);}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+#mobileMenu{
+  position:fixed;inset:0 0 0 auto;top:0;right:0;height:100vh;width:min(78vw,320px);z-index:550;
+  background:rgba(8,10,22,0.97);backdrop-filter:blur(18px);
+  border-left:1px solid var(--panel-border);
+  display:flex;flex-direction:column;gap:6px;padding:90px 30px 30px;
+  transform:translateX(100%);transition:transform .4s var(--ease);
+}
+#mobileMenu.open{transform:translateX(0);}
+#mobileMenu a{
+  font-family:var(--font-display);font-size:15px;letter-spacing:0.08em;padding:16px 0;
+  border-bottom:1px solid rgba(139,124,255,0.1);color:var(--text-1);
+}
+#menuOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:540;opacity:0;visibility:hidden;transition:opacity .35s;}
+#menuOverlay.open{opacity:1;visibility:visible;}
+
+/* ============ SECTION SHELL ============ */
+section{position:relative;z-index:1;padding:110px 0;}
+.section-head{text-align:center;max-width:640px;margin:0 auto 54px;}
+.section-head h2{font-size:clamp(26px,4vw,40px);font-weight:800;margin:14px 0 12px;}
+.section-head p{color:var(--text-1);font-size:17px;}
+
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s var(--ease), transform .8s var(--ease);}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+.glass{
+  background:var(--panel);
+  border:1px solid var(--panel-border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(14px) saturate(130%);
+  -webkit-backdrop-filter:blur(14px) saturate(130%);
+}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100svh;display:flex;align-items:center;padding-top:120px;padding-bottom:60px;
+  position:relative;
+}
+.hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:center;}
+.badge{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--font-display);font-size:11px;letter-spacing:0.16em;
+  padding:8px 16px;border-radius:99px;color:var(--cyan);
+  margin-bottom:26px;
+}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime);animation:blink 1.8s infinite;}
+.hero h1{
+  font-size:clamp(40px,6.4vw,74px);font-weight:900;line-height:1.03;letter-spacing:0.005em;
+}
+.hero h1 .line2{display:block;margin-top:4px;}
+.hero p.lead{
+  margin:24px 0 34px;color:var(--text-1);font-size:18px;max-width:480px;line-height:1.6;
+}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;}
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center;}
+.hex-frame{
+  position:relative;width:min(360px,80vw);aspect-ratio:1/1;
+  display:flex;align-items:center;justify-content:center;
+}
+.hex-ring{
+  position:absolute;inset:0;
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  background:conic-gradient(from 0deg, transparent 0%, var(--violet) 8%, transparent 18%, transparent 50%, var(--cyan) 58%, transparent 68%);
+  animation:spin 7s linear infinite;
+  opacity:0.75;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hex-ring.r2{animation-duration:11s;animation-direction:reverse;inset:18px;opacity:0.45;}
+.avatar-core{
+  position:relative;width:64%;aspect-ratio:1/1;border-radius:50%;
+  background:linear-gradient(160deg,#171b34,#0a0c1c);
+  border:1px solid rgba(139,124,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 60px -8px rgba(139,92,246,0.55), inset 0 0 30px rgba(34,226,245,0.08);
+  overflow:hidden;
+}
+.avatar-core .ag-mark{
+  font-family:var(--font-display);font-weight:900;font-size:15vw;max-font-size:64px;
+  background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;
+  font-size:clamp(38px,7vw,58px);
+}
+.avatar-scan{
+  position:absolute;left:0;right:0;height:36%;top:-40%;
+  background:linear-gradient(180deg, transparent, rgba(34,226,245,0.16), transparent);
+  animation:scan 3.2s ease-in-out infinite;
+}
+@keyframes scan{0%{top:-40%;}50%{top:100%;}100%{top:-40%;}}
+.hero-status-chip{
+  position:absolute;bottom:-6px;right:6%;
+  display:flex;align-items:center;gap:8px;
+  padding:9px 16px;border-radius:99px;
+  font-family:var(--font-display);font-size:11px;letter-spacing:0.12em;
+}
+.status-dot{width:8px;height:8px;border-radius:50%;flex:none;}
+.status-dot.online{background:var(--lime);box-shadow:0 0 9px var(--lime);}
+.status-dot.busy{background:var(--warn);box-shadow:0 0 9px var(--warn);}
+.status-dot.offline{background:var(--text-2);box-shadow:none;}
+
+/* ============ STATUS CARD (live status system) ============ */
+.status-card{
+  max-width:520px;margin:0 auto;padding:30px 34px;border-radius:18px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+  position:relative;overflow:hidden;
+}
+.status-card::before{
+  content:'';position:absolute;inset:0;background:var(--grad-main);opacity:0.06;pointer-events:none;
+}
+.status-left{display:flex;align-items:center;gap:16px;}
+.status-ring{
+  width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--panel-border);position:relative;flex:none;
+}
+.status-ring .pulse-core{width:12px;height:12px;border-radius:50%;}
+.status-ring .pulse-core.online{background:var(--lime);box-shadow:0 0 10px var(--lime);}
+.status-ring .pulse-core.busy{background:var(--warn);box-shadow:0 0 10px var(--warn);}
+.status-ring .pulse-core.offline{background:var(--text-2);}
+.status-ring::after{
+  content:'';position:absolute;inset:0;border-radius:50%;border:1px solid var(--lime);opacity:0.5;
+  animation:ringPulse 2s ease-out infinite;
+}
+.status-ring.busy::after{border-color:var(--warn);}
+.status-ring.offline::after{display:none;}
+@keyframes ringPulse{0%{transform:scale(0.8);opacity:0.6;}100%{transform:scale(1.7);opacity:0;}}
+.status-title{font-family:var(--font-display);font-size:15px;letter-spacing:0.06em;}
+.status-sub{color:var(--text-1);font-size:14px;margin-top:3px;}
+.status-tag{
+  font-family:var(--font-display);font-size:11px;letter-spacing:0.14em;padding:7px 14px;border-radius:99px;
+}
+.status-tag.online{color:var(--lime);border:1px solid rgba(173,255,47,0.35);}
+.status-tag.busy{color:var(--warn);border:1px solid rgba(255,176,32,0.35);}
+.status-tag.offline{color:var(--text-2);border:1px solid rgba(255,255,255,0.1);}
+
+/* ============ SUPPORT CARDS ============ */
+.support-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.support-card{
+  padding:30px 26px;border-radius:16px;position:relative;overflow:hidden;
+  transition:transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+  display:flex;flex-direction:column;gap:14px;
+}
+.support-card::before{
+  content:'';position:absolute;inset:-1px;border-radius:16px;padding:1px;
+  background:var(--grad-main);opacity:0;transition:opacity .35s var(--ease);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;
+}
+.support-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px -20px rgba(139,92,246,0.45);}
+.support-card:hover::before{opacity:1;}
+.card-icon{
+  width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  background:rgba(139,124,255,0.08);border:1px solid var(--panel-border);
+  font-size:24px;
+}
+.support-card h3{font-size:18px;font-weight:700;letter-spacing:0.01em;}
+.support-card p{color:var(--text-1);font-size:14.5px;line-height:1.5;flex:1;}
+.ff-detail{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(0,0,0,0.25);border:1px solid var(--panel-border);border-radius:8px;
+  padding:8px 12px;font-size:12.5px;
+}
+.ff-detail span:first-child{color:var(--text-2);font-family:var(--font-display);font-size:10px;letter-spacing:0.1em;}
+.ff-detail span:last-child{color:var(--text-0);font-weight:600;}
+.card-btn-row{display:flex;gap:10px;margin-top:auto;}
+.card-btn-row .btn{flex:1;padding:11px 14px;font-size:11.5px;}
+
+/* ============ QUICK CONNECT ============ */
+.quick-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.quick-btn{
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:26px 14px;border-radius:14px;
+  font-family:var(--font-display);font-size:12px;letter-spacing:0.07em;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+}
+.quick-btn .qi{font-size:26px;}
+.quick-btn:hover{transform:translateY(-6px) scale(1.03);border-color:rgba(139,124,255,0.55);}
+.quick-btn.qb-whatsapp:hover{box-shadow:0 16px 40px -14px rgba(37,211,102,0.5);}
+.quick-btn.qb-discord:hover{box-shadow:0 16px 40px -14px rgba(88,101,242,0.55);}
+.quick-btn.qb-ff:hover{box-shadow:0 16px 40px -14px rgba(139,92,246,0.55);}
+.quick-btn.qb-yt:hover{box-shadow:0 16px 40px -14px rgba(255,0,0,0.4);}
+.quick-btn.qb-ig:hover{box-shadow:0 16px 40px -14px rgba(225,48,108,0.45);}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.35);transform:scale(0);animation:rippleAnim .6s ease-out;pointer-events:none;}
+@keyframes rippleAnim{to{transform:scale(3.2);opacity:0;}}
+
+/* ============ FF PROFILE CARD ============ */
+.profile-wrap{display:flex;justify-content:center;}
+.profile-card{
+  width:min(460px,100%);padding:38px;border-radius:20px;position:relative;
+  text-align:center;overflow:hidden;
+}
+.profile-card .corner{position:absolute;width:22px;height:22px;border:2px solid var(--cyan);opacity:0.7;}
+.profile-card .c-tl{top:10px;left:10px;border-right:none;border-bottom:none;}
+.profile-card .c-tr{top:10px;right:10px;border-left:none;border-bottom:none;}
+.profile-card .c-bl{bottom:10px;left:10px;border-right:none;border-top:none;}
+.profile-card .c-br{bottom:10px;right:10px;border-left:none;border-top:none;}
+.profile-avatar{
+  width:96px;height:96px;border-radius:50%;margin:0 auto 16px;
+  background:linear-gradient(160deg,#181c36,#0a0c1c);border:1px solid var(--panel-border);
+  display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:800;font-size:30px;
+  background-clip:padding-box;position:relative;
+  box-shadow:0 0 40px -6px rgba(139,92,246,0.6);
+}
+.profile-card h3{font-size:22px;margin-bottom:4px;}
+.profile-role{color:var(--cyan);font-family:var(--font-display);font-size:11px;letter-spacing:0.16em;margin-bottom:18px;}
+.profile-status-row{display:flex;justify-content:center;margin-bottom:22px;}
+.profile-info{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.profile-info .info-block{
+  background:rgba(0,0,0,0.25);border:1px solid var(--panel-border);border-radius:10px;padding:12px;
+}
+.profile-info .info-block.full{grid-column:1/-1;}
+.profile-info label{display:block;font-family:var(--font-display);font-size:9.5px;letter-spacing:0.14em;color:var(--text-2);margin-bottom:5px;}
+.profile-info .val{font-weight:600;font-size:15px;}
+.profile-btns{display:flex;gap:12px;}
+
+/* ============ VISITOR COUNTER ============ */
+.visitor-band{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;}
+.visitor-pill{
+  display:flex;align-items:center;gap:12px;padding:16px 26px;border-radius:14px;
+}
+.visitor-pill .vnum{font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--cyan);}
+.visitor-pill .vlabel{font-size:12.5px;color:var(--text-1);letter-spacing:0.03em;}
+.visitor-pill .live-dot{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 8px var(--lime);animation:blink 1.6s infinite;}
+
+/* ============ FORM ============ */
+.form-shell{max-width:640px;margin:0 auto;padding:40px;border-radius:20px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-row.single{grid-template-columns:1fr;}
+.field label{display:block;font-family:var(--font-display);font-size:10.5px;letter-spacing:0.12em;color:var(--text-2);margin-bottom:8px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:13px 15px;border-radius:9px;
+  background:rgba(0,0,0,0.28);border:1px solid var(--panel-border);color:var(--text-0);font-size:14.5px;
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,226,245,0.15);
+}
+.field textarea{resize:vertical;min-height:110px;}
+.field.error input,.field.error select,.field.error textarea{border-color:var(--danger);}
+.field-err{color:var(--danger);font-size:12px;margin-top:6px;display:none;}
+.field.error .field-err{display:block;}
+.form-success{
+  display:none;align-items:center;gap:12px;padding:16px 18px;border-radius:10px;
+  background:rgba(173,255,47,0.08);border:1px solid rgba(173,255,47,0.35);color:var(--lime);
+  font-family:var(--font-display);font-size:13px;letter-spacing:0.04em;margin-top:18px;
+}
+.form-success.show{display:flex;}
+
+/* ============ FAQ ============ */
+.faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+.faq-item{border-radius:12px;overflow:hidden;}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:20px 24px;font-weight:600;font-size:16px;
+}
+.faq-q .plus{font-family:var(--font-display);font-size:18px;color:var(--cyan);transition:transform .3s var(--ease);flex:none;}
+.faq-item.open .faq-q .plus{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s var(--ease), padding .4s var(--ease);padding:0 24px;color:var(--text-1);font-size:14.5px;line-height:1.6;}
+.faq-item.open .faq-a{max-height:200px;padding:0 24px 20px;}
+
+/* ============ SOCIAL ============ */
+.social-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:18px;}
+.social-card{padding:26px 20px;border-radius:14px;text-align:center;transition:transform .3s var(--ease),border-color .3s var(--ease);}
+.social-card:hover{transform:translateY(-6px);border-color:rgba(139,124,255,0.5);}
+.social-card .si{font-size:26px;margin-bottom:10px;}
+.social-card h4{font-size:14px;margin-bottom:6px;}
+.social-card p{font-size:12.5px;color:var(--text-2);margin-bottom:16px;min-height:32px;}
+
+/* ============ TOAST ============ */
+#toastHost{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:2000;display:flex;flex-direction:column;gap:10px;align-items:center;}
+.toast{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 22px;border-radius:99px;
+  background:rgba(12,14,28,0.92);border:1px solid rgba(173,255,47,0.4);
+  backdrop-filter:blur(10px);
+  font-family:var(--font-display);font-size:12.5px;letter-spacing:0.05em;color:var(--lime);
+  box-shadow:0 10px 30px -8px rgba(0,0,0,0.6);
+  animation:toastIn .35s var(--ease), toastOut .35s var(--ease) 2.4s forwards;
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes toastOut{to{opacity:0;transform:translateY(-10px);}}
+
+/* ============ FOOTER ============ */
+footer{position:relative;z-index:1;padding:60px 0 100px;border-top:1px solid rgba(139,124,255,0.14);}
+.footer-grid{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:30px;}
+.footer-links{display:flex;gap:26px;flex-wrap:wrap;}
+.footer-links a{font-family:var(--font-display);font-size:12px;letter-spacing:0.08em;color:var(--text-1);}
+.footer-links a:hover{color:var(--cyan);}
+.footer-bottom{margin-top:40px;padding-top:24px;border-top:1px solid rgba(139,124,255,0.1);text-align:center;color:var(--text-2);font-size:12.5px;}
+
+/* ============ STICKY MOBILE CTA ============ */
+#stickyCta{
+  position:fixed;left:0;right:0;bottom:0;z-index:400;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(6,8,18,0.92);backdrop-filter:blur(14px);
+  border-top:1px solid rgba(139,124,255,0.2);
+  display:none;
+}
+@media (max-width:760px){#stickyCta{display:block;}}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:980px){
+  nav.navlinks{display:none;}
+  .hamburger{display:flex;}
+  .hero-grid{grid-template-columns:1fr;text-align:center;}
+  .hero p.lead{margin-left:auto;margin-right:auto;}
+  .hero-actions{justify-content:center;}
+  .hero-visual{order:-1;margin-bottom:10px;}
+  .support-grid{grid-template-columns:1fr 1fr;}
+  .quick-grid{grid-template-columns:repeat(3,1fr);}
+  .social-grid{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+}
+@media (max-width:620px){
+  section{padding:76px 0;}
+  .support-grid{grid-template-columns:1fr;}
+  .quick-grid{grid-template-columns:repeat(2,1fr);}
+  .social-grid{grid-template-columns:1fr 1fr;}
+  .profile-info{grid-template-columns:1fr;}
+  .status-card{justify-content:center;text-align:center;}
+  .status-left{flex-direction:column;}
+  body{padding-bottom:78px;}
+}
+.hide-mobile{display:inline-flex;}
+@media (max-width:760px){.hide-mobile{display:none;}}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;}
+</style>
+</head>
+<body>
+
+<!-- ============ LOADER ============ -->
+<div id="loader">
+  <div class="loader-mark">AURA ZONE</div>
+  <div class="loader-sub">INITIALIZING SUPPORT SYSTEM...</div>
+  <div class="loader-bar-track"><div class="loader-bar-fill" id="loaderFill"></div></div>
+  <div class="loader-pct" id="loaderPct">0%</div>
+</div>
+
+<div class="bg-fixed"></div>
+<div class="bg-grid"></div>
+<canvas id="particles"></canvas>
+
+<!-- ============ NAV ============ -->
+<header id="siteHeader">
+  <div class="wrap navrow">
+    <div class="logo"><span class="logo-dot"></span><span id="brandNameNav">AURA ZONE</span></div>
+    <nav class="navlinks">
+      <a href="#home">HOME</a>
+      <a href="#support">SUPPORT</a>
+      <a href="#connect">CONNECT</a>
+      <a href="#freefire">FREE FIRE</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a href="#connect" class="btn btn-primary hide-mobile">CONNECT NOW</a>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<div id="menuOverlay"></div>
+<nav id="mobileMenu">
+  <a href="#home">HOME</a>
+  <a href="#support">SUPPORT</a>
+  <a href="#connect">CONNECT</a>
+  <a href="#freefire">FREE FIRE</a>
+  <a href="#faq">FAQ</a>
+  <a href="#connect" class="btn btn-primary" style="margin-top:14px;justify-content:center;">CONNECT NOW</a>
+</nav>
+
+<main>
+<!-- ============ HERO ============ -->
+<section class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div class="reveal in">
+      <div class="badge glass"><span class="dot"></span>AURA ZONE • GAMING SUPPORT</div>
+      <h1>NEED SUPPORT?<span class="line2 grad-text">LET'S CONNECT.</span></h1>
+      <p class="lead">Need gaming support, want to connect in-game, or want to join our community? Choose your preferred platform below.</p>
+      <div class="hero-actions">
+        <a href="#connect" class="btn btn-primary">⚡ CONNECT NOW</a>
+        <a href="#freefire" class="btn btn-ghost">🎮 FREE FIRE PROFILE</a>
+      </div>
+    </div>
+    <div class="hero-visual reveal in">
+      <div class="hex-frame">
+        <div class="hex-ring"></div>
+        <div class="hex-ring r2"></div>
+        <div class="avatar-core">
+          <div class="avatar-scan"></div>
+          <span class="ag-mark">AZ</span>
+        </div>
+        <div class="hero-status-chip glass">
+          <span class="status-dot online" id="heroStatusDot"></span>
+          <span id="heroStatusText">ONLINE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIVE STATUS ============ -->
+<section id="statusSection">
+  <div class="wrap">
+    <div class="status-card glass reveal">
+      <div class="status-left">
+        <div class="status-ring online" id="statusRing">
+          <div class="pulse-core online" id="statusPulseCore"></div>
+        </div>
+        <div>
+          <div class="status-title" id="brandNameStatus">AURA ZONE</div>
+          <div class="status-sub" id="statusSubtext">Currently available for support</div>
+        </div>
+      </div>
+      <div class="status-tag online" id="statusTag">● ONLINE</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SUPPORT CENTER ============ -->
+<section id="support">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">SUPPORT CENTER</span>
+      <h2>HOW CAN WE <span class="grad-text">HELP YOU?</span></h2>
+      <p>Choose a support option and connect instantly.</p>
+    </div>
+    <div class="support-grid">
+      <div class="support-card glass reveal">
+        <div class="card-icon">💬</div>
+        <h3>WhatsApp Support</h3>
+        <p>Need quick help? Send us a direct message.</p>
+        <div class="card-btn-row"><a href="#" class="btn btn-primary btn-block" id="waSupportBtn">CHAT NOW</a></div>
+      </div>
+      <div class="support-card glass reveal">
+        <div class="card-icon">🎧</div>
+        <h3>Discord Community</h3>
+        <p>Join the Aura Zone community and connect with us.</p>
+        <div class="card-btn-row"><a href="#" class="btn btn-primary btn-block" id="discordSupportBtn" target="_blank" rel="noopener">JOIN DISCORD</a></div>
+      </div>
+      <div class="support-card glass reveal">
+        <div class="card-icon">🎮</div>
+        <h3>Free Fire Support</h3>
+        <p>Connect with Aura Zone directly in Free Fire.</p>
+        <div class="ff-detail"><span>IGN</span><span id="ffIgnMini">AuraZoneX</span></div>
+        <div class="ff-detail"><span>UID</span><span id="ffUidMini">123456789</span></div>
+        <div class="card-btn-row">
+          <button class="btn btn-ghost" id="copyUidBtnCard">COPY UID</button>
+          <a href="#freefire" class="btn btn-primary">ADD ME</a>
+        </div>
+      </div>
+      <div class="support-card glass reveal">
+        <div class="card-icon">🛟</div>
+        <h3>General Support</h3>
+        <p>Have another question or need help?</p>
+        <div class="card-btn-row"><a href="#connect" class="btn btn-primary btn-block">CONTACT US</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ QUICK CONNECT ============ -->
+<section id="connect">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">QUICK CONNECT</span>
+      <h2>ONE CLICK. <span class="grad-text">INSTANT CONNECTION.</span></h2>
+    </div>
+    <div class="quick-grid">
+      <a href="#" class="quick-btn qb-whatsapp glass reveal" id="qcWhatsapp"><span class="qi">🟢</span>WHATSAPP</a>
+      <a href="#" class="quick-btn qb-discord glass reveal" id="qcDiscord" target="_blank" rel="noopener"><span class="qi">🟣</span>DISCORD</a>
+      <a href="#freefire" class="quick-btn qb-ff glass reveal"><span class="qi">🎮</span>FREE FIRE</a>
+      <a href="#" class="quick-btn qb-yt glass reveal" id="qcYoutube" target="_blank" rel="noopener"><span class="qi">▶️</span>YOUTUBE</a>
+      <a href="#" class="quick-btn qb-ig glass reveal" id="qcInstagram" target="_blank" rel="noopener"><span class="qi">📷</span>INSTAGRAM</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FREE FIRE PROFILE ============ -->
+<section id="freefire">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">PLAYER CARD</span>
+      <h2>FREE FIRE <span class="grad-text">PROFILE</span></h2>
+    </div>
+    <div class="profile-wrap">
+      <div class="profile-card glass reveal">
+        <span class="corner c-tl"></span><span class="corner c-tr"></span><span class="corner c-bl"></span><span class="corner c-br"></span>
+        <div class="profile-avatar"><span class="grad-text">AZ</span></div>
+        <h3 id="brandNameProfile">AURA ZONE</h3>
+        <div class="profile-role">FREE FIRE PLAYER</div>
+        <div class="profile-status-row">
+          <div class="status-tag online" id="profileStatusTag">● ONLINE</div>
+        </div>
+        <div class="profile-info">
+          <div class="info-block"><label>IGN</label><div class="val" id="ffIgn">AuraZoneX</div></div>
+          <div class="info-block"><label>UID</label><div class="val" id="ffUid">123456789</div></div>
+          <div class="info-block full"><label>REGION</label><div class="val">BANGLADESH</div></div>
+        </div>
+        <div class="profile-btns">
+          <button class="btn btn-ghost btn-block" id="copyUidBtnProfile">COPY UID</button>
+          <a href="#connect" class="btn btn-primary btn-block">CONNECT IN GAME</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VISITOR COUNTER ============ -->
+<section id="visitors">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">COMMUNITY VISITORS</span>
+    </div>
+    <div class="visitor-band reveal">
+      <div class="visitor-pill glass"><span class="live-dot"></span><span class="vnum" id="onlineVisitorsNum">—</span><span class="vlabel">ONLINE VISITORS</span></div>
+      <div class="visitor-pill glass"><span class="vnum" id="totalVisitsNum">—</span><span class="vlabel">TOTAL VISITS</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT FORM ============ -->
+<section id="requestForm">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">GET IN TOUCH</span>
+      <h2>SEND A <span class="grad-text">SUPPORT REQUEST</span></h2>
+    </div>
+    <form class="form-shell glass reveal" id="supportForm" novalidate>
+      <div class="form-row">
+        <div class="field" id="field-name">
+          <label for="f-name">NAME</label>
+          <input type="text" id="f-name" name="name" placeholder="Your name">
+          <div class="field-err">Please enter your name.</div>
+        </div>
+        <div class="field" id="field-uid">
+          <label for="f-uid">FREE FIRE UID</label>
+          <input type="text" id="f-uid" name="uid" placeholder="Your UID">
+          <div class="field-err">Please enter your Free Fire UID.</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field" id="field-email">
+          <label for="f-email">EMAIL (OPTIONAL)</label>
+          <input type="email" id="f-email" name="email" placeholder="you@example.com">
+          <div class="field-err">Please enter a valid email.</div>
+        </div>
+        <div class="field" id="field-type">
+          <label for="f-type">SUPPORT TYPE</label>
+          <select id="f-type" name="type">
+            <option value="">Select an option</option>
+            <option>Free Fire Support</option>
+            <option>Account Help</option>
+            <option>Discord Help</option>
+            <option>Collaboration</option>
+            <option>General Question</option>
+          </select>
+          <div class="field-err">Please select a support type.</div>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="field" id="field-message">
+          <label for="f-message">MESSAGE</label>
+          <textarea id="f-message" name="message" placeholder="Tell us what you need help with..."></textarea>
+          <div class="field-err">Please enter a message.</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">SEND REQUEST</button>
+      <div class="form-success" id="formSuccess">✓ SUPPORT REQUEST SENT</div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>GOT <span class="grad-text">QUESTIONS?</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item glass reveal">
+        <div class="faq-q"><span>How can I contact Aura Zone?</span><span class="plus">+</span></div>
+        <div class="faq-a">You can contact us directly through WhatsApp or Discord.</div>
+      </div>
+      <div class="faq-item glass reveal">
+        <div class="faq-q"><span>Can I add Aura Zone in Free Fire?</span><span class="plus">+</span></div>
+        <div class="faq-a">Yes. Use the Free Fire UID displayed on this website.</div>
+      </div>
+      <div class="faq-item glass reveal">
+        <div class="faq-q"><span>How can I join the Aura Zone Discord?</span><span class="plus">+</span></div>
+        <div class="faq-a">Click the Join Discord button to enter the community.</div>
+      </div>
+      <div class="faq-item glass reveal">
+        <div class="faq-q"><span>Can I contact Aura Zone for collaboration?</span><span class="plus">+</span></div>
+        <div class="faq-a">Yes. Send a support request or contact us directly.</div>
+      </div>
+      <div class="faq-item glass reveal">
+        <div class="faq-q"><span>Where can I find Aura Zone streams?</span><span class="plus">+</span></div>
+        <div class="faq-a">Visit our YouTube channel through the YouTube button.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOCIAL ============ -->
+<section id="social">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">STAY CONNECTED</span>
+      <h2>FOLLOW <span class="grad-text">AURA ZONE</span></h2>
+    </div>
+    <div class="social-grid">
+      <div class="social-card glass reveal">
+        <div class="si">▶️</div><h4>YouTube</h4><p>Gameplay & highlights</p>
+        <a href="#" class="btn btn-ghost btn-block" id="socialYoutube" target="_blank" rel="noopener">VISIT</a>
+      </div>
+      <div class="social-card glass reveal">
+        <div class="si">🎧</div><h4>Discord</h4><p>Join the community</p>
+        <a href="#" class="btn btn-ghost btn-block" id="socialDiscord" target="_blank" rel="noopener">VISIT</a>
+      </div>
+      <div class="social-card glass reveal">
+        <div class="si">💬</div><h4>WhatsApp</h4><p>Direct support</p>
+        <a href="#" class="btn btn-ghost btn-block" id="socialWhatsapp">VISIT</a>
+      </div>
+      <div class="social-card glass reveal">
+        <div class="si">📷</div><h4>Instagram</h4><p>Photos & updates</p>
+        <a href="#" class="btn btn-ghost btn-block" id="socialInstagram" target="_blank" rel="noopener">VISIT</a>
+      </div>
+      <div class="social-card glass reveal">
+        <div class="si">📘</div><h4>Facebook</h4><p>Community page</p>
+        <a href="#" class="btn btn-ghost btn-block" id="socialFacebook" target="_blank" rel="noopener">VISIT</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:10px;"><span class="logo-dot"></span><span id="brandNameFooter">AURA ZONE</span></div>
+        <p style="color:var(--text-2);font-size:13px;">Gaming • Streaming • Community • Support</p>
+      </div>
+      <div class="footer-links">
+        <a href="#home">HOME</a>
+        <a href="#support">SUPPORT</a>
+        <a href="#freefire">FREE FIRE</a>
+        <a href="#" id="footerDiscordLink" target="_blank" rel="noopener">DISCORD</a>
+        <a href="#" id="footerWhatsappLink">WHATSAPP</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 AURA ZONE | GAMING SUPPORT. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<!-- ============ STICKY MOBILE CTA ============ -->
+<div id="stickyCta">
+  <a href="#connect" class="btn btn-primary btn-block">⚡ CONNECT NOW</a>
+</div>
+
+<div id="toastHost"></div>
+
+<script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore-compat.js"></script>
+<script>
+  // AURA ZONE Firebase bootstrap (compat build works without ES-module imports)
+  window.AURA_FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBMMprwbeCGVPIkW-MbIOryKFIxbSCBEJU",
+    authDomain: "aura-zone-f8d86.firebaseapp.com",
+    projectId: "aura-zone-f8d86",
+    storageBucket: "aura-zone-f8d86.firebasestorage.app",
+    messagingSenderId: "522649013948",
+    appId: "1:522649013948:web:d6efc9679cf3d929268ab9",
+    measurementId: "G-QBBL8B9M1S"
+  };
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(window.AURA_FIREBASE_CONFIG);
+    window.AURA_DB = firebase.firestore();
+    window.AURA_FIREBASE_READY = true;
+  } catch (e) {
+    console.error('AURA ZONE Firebase init failed:', e);
+    window.AURA_FIREBASE_READY = false;
+  }
+</script>
+
+<script>
+/* =========================================================
+   AURA ZONE — CENTRAL CONFIGURATION
+   Replace every placeholder value below with your real info.
+   ========================================================= */
+const CONFIG = {
+  brandName: "AURA ZONE",
+  profileImage: "", // optional URL to a real avatar image; leave empty to use the AZ monogram
+
+  whatsappNumber: "8801XXXXXXXXX",           // country code + number, no + or spaces
+  whatsappMessage: "Hello Aura Zone, I need gaming support.",
+
+  discordInviteUrl: "https://discord.gg/YOUR_INVITE_CODE",
+
+  freeFireIGN: "AuraZoneX",
+  freeFireUID: "123456789",
+
+  youtubeUrl: "https://youtube.com/@YOUR_CHANNEL",
+  instagramUrl: "https://instagram.com/YOUR_HANDLE",
+  facebookUrl: "https://facebook.com/YOUR_PAGE",
+
+  // "online" | "busy" | "offline"
+  onlineStatus: "online",
+
+  statusMessages: {
+    online:  { tag: "● ONLINE",  sub: "Currently available for support" },
+    busy:    { tag: "● BUSY",    sub: "Online, but replies may be a little slower" },
+    offline: { tag: "● OFFLINE", sub: "Currently unavailable — leave a support request" }
+  },
+
+  // Visitor counters are populated when Firebase data is available.
+  visitorCounters: {
+    connected: false,
+    onlineVisitors: 0,
+    totalVisits: 0
+  }
+};
+
+/* ---------- Apply config to the DOM ---------- */
+function buildWhatsappLink(){
+  const num = CONFIG.whatsappNumber.replace(/[^0-9]/g,'');
+  const msg = encodeURIComponent(CONFIG.whatsappMessage);
+  return `https://wa.me/${num}?text=${msg}`;
+}
+function applyConfig(){
+  document.querySelectorAll('#brandNameNav,#brandNameStatus,#brandNameProfile,#brandNameFooter')
+    .forEach(el => el.textContent = CONFIG.brandName);
+  document.title = `${CONFIG.brandName} | Gaming Support`;
+
+  const wa = buildWhatsappLink();
+  ['waSupportBtn','qcWhatsapp','socialWhatsapp','footerWhatsappLink'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el){ el.href = wa; el.target = '_blank'; el.rel='noopener'; }
+  });
+
+  ['discordSupportBtn','qcDiscord','socialDiscord','footerDiscordLink'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.href = CONFIG.discordInviteUrl;
+  });
+
+  ['qcYoutube','socialYoutube'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.href = CONFIG.youtubeUrl;
+  });
+  ['qcInstagram','socialInstagram'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.href = CONFIG.instagramUrl;
+  });
+  const fb = document.getElementById('socialFacebook'); if(fb) fb.href = CONFIG.facebookUrl;
+
+  ['ffIgn','ffIgnMini'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent = CONFIG.freeFireIGN; });
+  ['ffUid','ffUidMini'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent = CONFIG.freeFireUID; });
+
+  applyStatus(CONFIG.onlineStatus);
+  applyVisitorCounters();
+}
+
+/* ---------- Live status system ---------- */
+function applyStatus(status){
+  const map = CONFIG.statusMessages[status] || CONFIG.statusMessages.online;
+  const heroDot = document.getElementById('heroStatusDot');
+  const heroText = document.getElementById('heroStatusText');
+  heroDot.className = 'status-dot ' + status;
+  heroText.textContent = status.toUpperCase();
+
+  const ring = document.getElementById('statusRing');
+  const core = document.getElementById('statusPulseCore');
+  ring.className = 'status-ring ' + status;
+  core.className = 'pulse-core ' + status;
+  document.getElementById('statusSubtext').textContent = map.sub;
+
+  document.querySelectorAll('#statusTag,#profileStatusTag').forEach(el=>{
+    el.className = 'status-tag ' + status;
+    el.textContent = map.tag;
+  });
+}
+
+/* ---------- Visitor counters (placeholder, no backend) ---------- */
+function applyVisitorCounters(){
+  const onlineEl = document.getElementById('onlineVisitorsNum');
+  const totalEl = document.getElementById('totalVisitsNum');
+  if(CONFIG.visitorCounters.connected){
+    onlineEl.textContent = CONFIG.visitorCounters.onlineVisitors;
+    totalEl.textContent = CONFIG.visitorCounters.totalVisits;
+  } else {
+    // No live backend connected yet — show a clear placeholder rather than fake numbers.
+    onlineEl.textContent = '—';
+    totalEl.textContent = '—';
+    onlineEl.title = 'Connect a database to make this live';
+    totalEl.title = 'Connect a database to make this live';
+  }
+}
+
+/* ---------- Toast notifications ---------- */
+function showToast(message){
+  const host = document.getElementById('toastHost');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span>✓</span><span>${message}</span>`;
+  host.appendChild(t);
+  setTimeout(()=> t.remove(), 2800);
+}
+
+/* ---------- Clipboard: UID copy ---------- */
+async function copyUid(){
+  try{
+    await navigator.clipboard.writeText(CONFIG.freeFireUID);
+  }catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = CONFIG.freeFireUID;
+    ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  showToast('FREE FIRE UID COPIED!');
+}
+document.getElementById('copyUidBtnCard').addEventListener('click', copyUid);
+document.getElementById('copyUidBtnProfile').addEventListener('click', copyUid);
+
+/* ---------- Loader ---------- */
+window.addEventListener('load', ()=>{
+  const fill = document.getElementById('loaderFill');
+  const pct = document.getElementById('loaderPct');
+  const loader = document.getElementById('loader');
+  let p = 0;
+  const timer = setInterval(()=>{
+    p = Math.min(100, p + Math.random()*22 + 12);
+    fill.style.width = p + '%';
+    pct.textContent = Math.round(p) + '%';
+    if(p >= 100){
+      clearInterval(timer);
+      setTimeout(()=> loader.classList.add('hide'), 220);
+    }
+  }, 90);
+});
+// Hard fallback: never leave the user stuck on the loading screen.
+setTimeout(()=>{
+  const loader=document.getElementById('loader');
+  if(loader) loader.classList.add('hide');
+}, 3000);
+
+/* ---------- Sticky header on scroll ---------- */
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', ()=>{
+  header.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive:true });
+
+/* ---------- Mobile menu ---------- */
+const hamburgerBtn = document.getElementById('hamburgerBtn');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuOverlay = document.getElementById('menuOverlay');
+function closeMenu(){
+  hamburgerBtn.classList.remove('open');
+  hamburgerBtn.setAttribute('aria-expanded','false');
+  mobileMenu.classList.remove('open');
+  menuOverlay.classList.remove('open');
+}
+hamburgerBtn.addEventListener('click', ()=>{
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburgerBtn.classList.toggle('open', isOpen);
+  hamburgerBtn.setAttribute('aria-expanded', isOpen);
+  menuOverlay.classList.toggle('open', isOpen);
+});
+menuOverlay.addEventListener('click', closeMenu);
+mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+/* ---------- Scroll reveal ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      io.unobserve(entry.target);
+    }
+  });
+}, { threshold:0.15 });
+revealEls.forEach(el=> io.observe(el));
+
+/* ---------- FAQ accordion ---------- */
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click', ()=>{
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+/* ---------- Quick connect ripple + scale ---------- */
+document.querySelectorAll('.quick-btn').forEach(btn=>{
+  btn.addEventListener('click', function(e){
+    const rect = this.getBoundingClientRect();
+    const ripple = document.createElement('span');
+    const size = Math.max(rect.width, rect.height);
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+    this.appendChild(ripple);
+    setTimeout(()=> ripple.remove(), 650);
+  });
+});
+
+/* ---------- Contact form validation + Firebase ---------- */
+const form = document.getElementById('supportForm');
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  let valid = true;
+  const checks = [
+    ['field-name','f-name', v=>v.trim().length > 0],
+    ['field-uid','f-uid', v=>v.trim().length > 0],
+    ['field-email','f-email', v=> v.trim()==='' || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)],
+    ['field-type','f-type', v=>v.trim().length > 0],
+    ['field-message','f-message', v=>v.trim().length > 0],
+  ];
+  checks.forEach(([fieldId, inputId, test])=>{
+    const fieldEl = document.getElementById(fieldId);
+    const inputEl = document.getElementById(inputId);
+    const ok = !!inputEl && test(inputEl.value);
+    fieldEl.classList.toggle('error', !ok);
+    if(!ok) valid = false;
+  });
+  if(!valid) return;
+
+  const messageVal = document.getElementById('f-message').value.trim();
+  if((messageVal.match(/https?:\/\//g) || []).length > 3){
+    document.getElementById('field-message').classList.add('error');
+    return;
+  }
+
+  const btn = form.querySelector('button[type="submit"]');
+  if(btn) btn.disabled = true;
+
+  try {
+    if(!window.AURA_FIREBASE_READY || !window.AURA_DB){
+      throw new Error('Firebase is not available.');
+    }
+    await window.AURA_DB.collection('support_requests').add({
+      name: document.getElementById('f-name').value.trim(),
+      uid: document.getElementById('f-uid').value.trim(),
+      email: document.getElementById('f-email').value.trim(),
+      type: document.getElementById('f-type').value.trim(),
+      message: messageVal,
+      status: 'New',
+      read: false,
+      created: firebase.firestore.FieldValue.serverTimestamp(),
+      createdMs: Date.now()
+    });
+
+    document.getElementById('formSuccess').classList.add('show');
+    form.reset();
+    showToast('SUPPORT REQUEST SENT!');
+    setTimeout(()=>document.getElementById('formSuccess').classList.remove('show'), 4000);
+  } catch(err) {
+    console.error('Support request failed:', err);
+    showToast('Could not send request. Check Firebase Firestore Rules.');
+  } finally {
+    if(btn) btn.disabled = false;
+  }
+});
+
+/* ---------- Firebase public data ---------- */
+async function loadFirebasePublicData(){
+  if(!window.AURA_FIREBASE_READY || !window.AURA_DB) return;
+  try {
+    const db = window.AURA_DB;
+    const [settingsSnap, socialSnap, ffSnap, statusSnap] = await Promise.all([
+      db.collection('site_settings').doc('main').get(),
+      db.collection('social_links').doc('main').get(),
+      db.collection('free_fire').doc('main').get(),
+      db.collection('status').doc('main').get()
+    ]);
+
+    if(settingsSnap.exists){
+      const x=settingsSnap.data();
+      if(x.brandName) CONFIG.brandName=x.brandName;
+      if(x.profileImage!==undefined) CONFIG.profileImage=x.profileImage;
+    }
+    if(socialSnap.exists){
+      const x=socialSnap.data();
+      const pick=(key)=>{ const v=x[key]; return v && typeof v==='object' ? v.url : v; };
+      if(x.whatsapp && typeof x.whatsapp==='object'){
+        if(x.whatsapp.url) CONFIG.whatsappNumber=String(x.whatsapp.url).replace(/[^0-9]/g,'');
+        if(x.whatsapp.message) CONFIG.whatsappMessage=x.whatsapp.message;
+      }
+      if(x.whatsappNumber) CONFIG.whatsappNumber=String(x.whatsappNumber).replace(/[^0-9]/g,'');
+      if(x.whatsappMessage) CONFIG.whatsappMessage=x.whatsappMessage;
+      if(pick('discord')) CONFIG.discordInviteUrl=pick('discord');
+      if(pick('youtube')) CONFIG.youtubeUrl=pick('youtube');
+      if(pick('instagram')) CONFIG.instagramUrl=pick('instagram');
+      if(pick('facebook')) CONFIG.facebookUrl=pick('facebook');
+    }
+    if(ffSnap.exists){
+      const x=ffSnap.data();
+      if(x.ign) CONFIG.freeFireIGN=x.ign;
+      if(x.uid) CONFIG.freeFireUID=x.uid;
+      if(x.profileImage) CONFIG.profileImage=x.profileImage;
+    }
+    if(statusSnap.exists){
+      const x=statusSnap.data();
+      if(x.current) CONFIG.onlineStatus=x.current;
+      const msgs=x.messages || {};
+      if(x.onlineMessage) msgs.online=x.onlineMessage;
+      if(x.busyMessage) msgs.busy=x.busyMessage;
+      if(x.offlineMessage) msgs.offline=x.offlineMessage;
+      if(msgs.online) CONFIG.statusMessages.online.sub=msgs.online;
+      if(msgs.busy) CONFIG.statusMessages.busy.sub=msgs.busy;
+      if(msgs.offline) CONFIG.statusMessages.offline.sub=msgs.offline;
+    }
+    applyConfig();
+  } catch(err) {
+    console.error('Firebase public data read failed:', err);
+    applyConfig();
+  }
+}
+
+function startRealtimePublicSync(){
+  if(!window.AURA_FIREBASE_READY || !window.AURA_DB) return;
+  const db = window.AURA_DB;
+  const refs = [
+    ['site_settings','main'],
+    ['social_links','main'],
+    ['free_fire','main'],
+    ['status','main']
+  ];
+  refs.forEach(([col,id])=>{
+    db.collection(col).doc(id).onSnapshot((snap)=>{
+      if(!snap.exists) return;
+      const x=snap.data();
+      if(col==='site_settings'){
+        if(x.brandName) CONFIG.brandName=x.brandName;
+        if(x.profileImage!==undefined) CONFIG.profileImage=x.profileImage;
+      }
+      if(col==='social_links'){
+        const pick=(key)=>{ const v=x[key]; return v && typeof v==='object' ? v.url : v; };
+        if(x.whatsapp && typeof x.whatsapp==='object'){
+          if(x.whatsapp.url) CONFIG.whatsappNumber=String(x.whatsapp.url).replace(/[^0-9]/g,'');
+          if(x.whatsapp.message) CONFIG.whatsappMessage=x.whatsapp.message;
+        }
+        if(x.whatsappNumber) CONFIG.whatsappNumber=String(x.whatsappNumber).replace(/[^0-9]/g,'');
+        if(x.whatsappMessage) CONFIG.whatsappMessage=x.whatsappMessage;
+        if(pick('discord')) CONFIG.discordInviteUrl=pick('discord');
+        if(pick('youtube')) CONFIG.youtubeUrl=pick('youtube');
+        if(pick('instagram')) CONFIG.instagramUrl=pick('instagram');
+        if(pick('facebook')) CONFIG.facebookUrl=pick('facebook');
+      }
+      if(col==='free_fire'){
+        if(x.ign) CONFIG.freeFireIGN=x.ign;
+        if(x.uid) CONFIG.freeFireUID=x.uid;
+        if(x.profileImage) CONFIG.profileImage=x.profileImage;
+      }
+      if(col==='status'){
+        if(x.current) CONFIG.onlineStatus=x.current;
+        const msgs=x.messages || {};
+        if(x.onlineMessage) msgs.online=x.onlineMessage;
+        if(x.busyMessage) msgs.busy=x.busyMessage;
+        if(x.offlineMessage) msgs.offline=x.offlineMessage;
+        if(msgs.online) CONFIG.statusMessages.online.sub=msgs.online;
+        if(msgs.busy) CONFIG.statusMessages.busy.sub=msgs.busy;
+        if(msgs.offline) CONFIG.statusMessages.offline.sub=msgs.offline;
+      }
+      applyConfig();
+    }, (err)=>console.error('Realtime sync failed for '+col, err));
+  });
+}
+
+async function createVisitorSession(){
+  if(!window.AURA_FIREBASE_READY || !window.AURA_DB) return;
+  try {
+    const key='aura_zone_visitor_session';
+    let sid=localStorage.getItem(key);
+    if(!sid){ sid=(crypto.randomUUID ? crypto.randomUUID() : Date.now()+'-'+Math.random().toString(36).slice(2)); localStorage.setItem(key,sid); }
+    await window.AURA_DB.collection('visitor_sessions').doc(sid).set({
+      sessionId:sid, createdMs:Date.now(), lastSeenMs:Date.now(), userAgent:navigator.userAgent.slice(0,180)
+    },{merge:true});
+  } catch(err){ console.debug('Visitor tracking unavailable:',err); }
+}
+
+// Load Firestore-backed values after the page is ready. The local CONFIG remains
+// the fallback, so Firebase errors never block the public website.
+window.addEventListener('load', ()=>{
+  loadFirebasePublicData();
+  startRealtimePublicSync();
+  createVisitorSession();
+});
+
+/* ---------- Ambient particles (lightweight canvas) ---------- */
+(function particles(){
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let w, h, particlesArr = [];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const COUNT = reducedMotion ? 0 : (window.innerWidth < 700 ? 26 : 50);
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize, { passive:true });
+  resize();
+
+  function init(){
+    particlesArr = Array.from({length: COUNT}, ()=>({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      r: Math.random()*1.6 + 0.4,
+      vy: -(Math.random()*0.35 + 0.08),
+      vx: (Math.random()-0.5)*0.2,
+      hue: Math.random() > 0.5 ? '139,124,255' : '34,226,245',
+      a: Math.random()*0.5 + 0.15
+    }));
+  }
+  init();
+
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    particlesArr.forEach(p=>{
+      p.x += p.vx; p.y += p.vy;
+      if(p.y < -10) p.y = h + 10;
+      if(p.x < -10) p.x = w + 10;
+      if(p.x > w+10) p.x = -10;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${p.hue},${p.a})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+  if(COUNT > 0) requestAnimationFrame(tick);
+})();
+
+/* ---------- Init ---------- */
+applyConfig();
+</script>
+</body>
+</html>
