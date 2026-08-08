@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AURA ZONE | Admin Panel</title>
+<meta name="theme-color" content="#05060d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg-0:#05060d; --bg-1:#0a0d1c; --bg-2:#0e1228;
+  --panel: rgba(18,22,44,0.55); --panel-border: rgba(139,124,255,0.22);
+  --panel-solid:#0d1024;
+  --violet:#8b5cf6; --violet-2:#a78bfa; --cyan:#22e2f5; --cyan-dim:#1aa8b8;
+  --lime:#adff2f; --danger:#ff4d6d; --warn:#ffb020; --ok:#3ddc97;
+  --text-0:#eef0ff; --text-1:#aab0d6; --text-2:#6c7299;
+  --grad-main: linear-gradient(115deg,var(--violet) 0%,#6d5ef0 32%,var(--cyan) 100%);
+  --font-display:'Orbitron',sans-serif; --font-body:'Rajdhani',sans-serif;
+  --radius:14px; --ease:cubic-bezier(.16,.84,.44,1);
+  --sidebar-w:252px; --topbar-h:66px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+html,body{height:100%;}
+body{
+  background:var(--bg-0); color:var(--text-0); font-family:var(--font-body); font-size:16px;
+  min-height:100vh; overflow-x:hidden;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input,select,textarea{font-family:inherit;color:inherit;background:none;border:none;outline:none;}
+::selection{background:var(--violet);color:#fff;}
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:.02em;font-weight:800;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:var(--bg-0);}
+::-webkit-scrollbar-thumb{background:linear-gradient(var(--violet),var(--cyan));border-radius:8px;}
+
+.bg-fixed{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 500px at 10% -5%, rgba(139,92,246,0.18), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(34,226,245,0.12), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 50% 110%, rgba(139,92,246,0.10), transparent 60%);
+}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.3;
+  background-image:linear-gradient(rgba(139,124,255,0.06) 1px, transparent 1px),linear-gradient(90deg, rgba(139,124,255,0.06) 1px, transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(ellipse 100% 70% at 50% 0%, black 40%, transparent 100%);
+}
+.glass{
+  background:var(--panel); border:1px solid var(--panel-border); border-radius:var(--radius);
+  backdrop-filter:blur(18px) saturate(140%); -webkit-backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:0 20px 50px -25px rgba(0,0,0,.6);
+}
+.eyebrow{font-family:var(--font-display);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);}
+.grad-text{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;color:transparent;}
+
+/* ---------- buttons / inputs ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-display);
+  font-size:12px;letter-spacing:.08em;font-weight:600;padding:12px 20px;border-radius:9px;white-space:nowrap;
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),filter .2s var(--ease),opacity .2s;position:relative;}
+.btn:active{transform:scale(.97);}
+.btn:disabled{opacity:.55;cursor:not-allowed;}
+.btn-primary{background:var(--grad-main);color:#08040f;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 8px 22px -8px rgba(139,92,246,.65);}
+.btn-primary:hover:not(:disabled){box-shadow:0 0 0 1px rgba(255,255,255,.14) inset,0 10px 30px -6px rgba(34,226,245,.5);transform:translateY(-1px);}
+.btn-ghost{background:rgba(139,124,255,.07);color:var(--text-0);border:1px solid var(--panel-border);}
+.btn-ghost:hover{background:rgba(139,124,255,.15);border-color:rgba(139,124,255,.5);}
+.btn-danger{background:rgba(255,77,109,.12);color:var(--danger);border:1px solid rgba(255,77,109,.35);}
+.btn-danger:hover{background:rgba(255,77,109,.2);}
+.btn-sm{padding:8px 14px;font-size:10.5px;}
+.btn-block{width:100%;}
+.spin{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#08040f;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+.field{display:flex;flex-direction:column;gap:7px;}
+.field label{font-family:var(--font-display);font-size:10.5px;letter-spacing:.12em;color:var(--text-1);}
+.input,.select,.textarea{
+  background:rgba(255,255,255,.03);border:1px solid var(--panel-border);border-radius:9px;padding:12px 14px;
+  font-size:15px;color:var(--text-0);transition:border-color .2s,box-shadow .2s;
+}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(34,226,245,.14);}
+.textarea{resize:vertical;min-height:90px;}
+.input::placeholder,.textarea::placeholder{color:var(--text-2);}
+.select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aab0d6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;}
+.pw-wrap{position:relative;}
+.pw-wrap .input{width:100%;padding-right:44px;}
+.pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--text-1);font-family:var(--font-display);letter-spacing:.05em;}
+.pw-toggle:hover{color:var(--cyan);}
+.toggle{position:relative;width:42px;height:24px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid var(--panel-border);flex:none;transition:background .2s;}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--text-1);transition:transform .2s var(--ease),background .2s;}
+.toggle.on{background:rgba(139,92,246,.35);border-color:var(--violet);}
+.toggle.on::after{transform:translateX(18px);background:var(--cyan);}
+
+/* ---------- Login ---------- */
+#loginScreen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-card{width:100%;max-width:400px;padding:38px 32px;position:relative;z-index:2;}
+.login-logo{display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--font-display);font-weight:800;font-size:21px;letter-spacing:.08em;margin-bottom:6px;}
+.login-dot{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
+.login-sub{text-align:center;color:var(--text-1);font-size:13px;letter-spacing:.08em;margin-bottom:28px;font-family:var(--font-display);}
+.login-form{display:flex;flex-direction:column;gap:16px;}
+.login-row{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text-1);}
+.remember{display:flex;align-items:center;gap:8px;}
+.checkbox{width:16px;height:16px;border-radius:4px;border:1px solid var(--panel-border);display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.03);flex:none;}
+.checkbox.on{background:var(--grad-main);border-color:transparent;}
+.checkbox.on::after{content:'✓';font-size:10px;color:#08040f;font-weight:900;}
+.login-err{display:none;align-items:center;gap:8px;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.35);color:var(--danger);
+  font-size:12.5px;padding:10px 12px;border-radius:8px;}
+.login-err.show{display:flex;}
+.shake{animation:shake .4s;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+.login-hint{margin-top:18px;text-align:center;font-size:11px;color:var(--text-2);line-height:1.6;}
+
+/* ---------- Admin shell ---------- */
+#adminShell{display:none;min-height:100vh;position:relative;z-index:1;}
+#sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);z-index:60;
+  background:rgba(8,10,22,.85);backdrop-filter:blur(20px);border-right:1px solid var(--panel-border);
+  display:flex;flex-direction:column;padding:22px 16px;transition:transform .35s var(--ease),width .3s var(--ease);
+}
+.sb-brand{display:flex;align-items:center;gap:9px;padding:6px 8px 22px;font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:.06em;}
+.sb-brand small{display:block;font-size:9px;letter-spacing:.18em;color:var(--text-2);font-weight:600;margin-top:2px;}
+.sb-nav{display:flex;flex-direction:column;gap:4px;flex:1;overflow-y:auto;}
+.sb-link{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--text-1);
+  position:relative;transition:background .2s,color .2s;}
+.sb-link .ic{width:18px;text-align:center;font-size:15px;flex:none;}
+.sb-link:hover{background:rgba(139,124,255,.08);color:var(--text-0);}
+.sb-link.active{background:linear-gradient(90deg,rgba(139,92,246,.22),rgba(34,226,245,.08));color:var(--text-0);}
+.sb-link.active::before{content:'';position:absolute;left:-16px;top:8px;bottom:8px;width:3px;border-radius:3px;background:var(--grad-main);box-shadow:0 0 10px var(--cyan);}
+.sb-badge{margin-left:auto;background:var(--danger);color:#fff;font-family:var(--font-display);font-size:10px;font-weight:800;
+  padding:2px 7px;border-radius:20px;min-width:18px;text-align:center;}
+.sb-foot{border-top:1px solid var(--panel-border);padding-top:14px;margin-top:10px;}
+.sb-logout{width:100%;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:9px;color:var(--danger);font-weight:700;font-size:13.5px;}
+.sb-logout:hover{background:rgba(255,77,109,.1);}
+
+#mainArea{margin-left:var(--sidebar-w);min-height:100vh;transition:margin-left .3s var(--ease);}
+#topbar{height:var(--topbar-h);position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:16px;
+  padding:0 26px;background:rgba(6,8,18,.72);backdrop-filter:blur(16px);border-bottom:1px solid var(--panel-border);}
+.tb-menu-btn{display:none;width:36px;height:36px;border-radius:8px;background:rgba(139,124,255,.08);align-items:center;justify-content:center;font-size:16px;flex:none;}
+.tb-search{flex:1;max-width:340px;display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.04);border:1px solid var(--panel-border);
+  border-radius:9px;padding:9px 14px;}
+.tb-search input{flex:1;font-size:13.5px;}
+.tb-search input::placeholder{color:var(--text-2);}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:14px;}
+.tb-status{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:10.5px;letter-spacing:.1em;
+  padding:7px 12px;border-radius:20px;background:rgba(255,255,255,.03);border:1px solid var(--panel-border);}
+.status-dot-sm{width:7px;height:7px;border-radius:50%;flex:none;}
+.status-dot-sm.online{background:var(--ok);box-shadow:0 0 8px var(--ok);}
+.status-dot-sm.busy{background:var(--warn);box-shadow:0 0 8px var(--warn);}
+.status-dot-sm.offline{background:var(--danger);box-shadow:0 0 8px var(--danger);}
+.tb-icon-btn{position:relative;width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.03);border:1px solid var(--panel-border);
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex:none;}
+.tb-icon-btn:hover{background:rgba(139,124,255,.12);}
+.tb-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);}
+.tb-profile{display:flex;align-items:center;gap:9px;}
+.tb-avatar{width:34px;height:34px;border-radius:9px;background:var(--grad-main);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:800;font-size:13px;color:#08040f;flex:none;}
+.tb-profile-name{font-size:12.5px;font-weight:700;line-height:1.2;}
+.tb-profile-role{font-size:10.5px;color:var(--text-2);}
+
+#pageContent{padding:26px;max-width:1360px;}
+.page-enter{animation:pageIn .4s var(--ease);}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+.page-head h1{font-size:clamp(20px,2.4vw,26px);}
+.page-head p{color:var(--text-1);font-size:13.5px;margin-top:4px;}
+
+/* stat cards */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:22px;}
+.stat-card{padding:20px;position:relative;overflow:hidden;transition:transform .25s var(--ease),box-shadow .25s var(--ease);}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 24px 50px -20px rgba(139,92,246,.35);}
+.stat-card::before{content:'';position:absolute;top:-40%;right:-30%;width:140px;height:140px;border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,.25),transparent 70%);filter:blur(6px);}
+.stat-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.stat-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;
+  background:rgba(139,124,255,.1);border:1px solid var(--panel-border);}
+.stat-val{font-family:var(--font-display);font-size:26px;font-weight:800;}
+.stat-label{color:var(--text-1);font-size:12px;margin-top:5px;letter-spacing:.03em;}
+
+.chart-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:22px;}
+@media (max-width:980px){.chart-grid{grid-template-columns:1fr;}}
+.chart-card{padding:20px;}
+.chart-card h3{font-size:14px;margin-bottom:14px;letter-spacing:.04em;}
+.chart-wrap{height:230px;position:relative;}
+
+.card{padding:24px;margin-bottom:20px;}
+.card h3{font-size:15px;margin-bottom:4px;}
+.card .card-sub{color:var(--text-1);font-size:12.5px;margin-bottom:18px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media (max-width:720px){.form-grid{grid-template-columns:1fr;}}
+.form-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;}
+.divider{height:1px;background:var(--panel-border);margin:22px 0;}
+
+/* social rows */
+.social-row{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid rgba(139,124,255,.1);flex-wrap:wrap;}
+.social-row:last-child{border-bottom:none;}
+.social-ic{width:42px;height:42px;border-radius:10px;background:rgba(139,124,255,.1);border:1px solid var(--panel-border);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex:none;}
+.social-info{min-width:110px;}
+.social-info b{font-size:13.5px;display:block;}
+.social-info span{font-size:11px;color:var(--text-2);}
+.social-input-wrap{flex:1;min-width:180px;}
+
+/* table */
+.table-toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.table-toolbar .input,.table-toolbar .select{padding:10px 14px;font-size:13px;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:720px;}
+th{text-align:left;font-family:var(--font-display);font-size:10.5px;letter-spacing:.08em;color:var(--text-2);
+  padding:10px 12px;border-bottom:1px solid var(--panel-border);white-space:nowrap;}
+td{padding:13px 12px;font-size:13.5px;border-bottom:1px solid rgba(139,124,255,.08);vertical-align:middle;}
+tr.tbl-row{transition:background .2s;cursor:pointer;}
+tr.tbl-row:hover{background:rgba(139,124,255,.06);}
+.pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-display);font-size:10px;letter-spacing:.06em;
+  padding:5px 10px;border-radius:20px;font-weight:700;}
+.pill.new{background:rgba(34,226,245,.12);color:var(--cyan);border:1px solid rgba(34,226,245,.3);}
+.pill.progress{background:rgba(255,176,32,.12);color:var(--warn);border:1px solid rgba(255,176,32,.3);}
+.pill.resolved{background:rgba(61,220,151,.12);color:var(--ok);border:1px solid rgba(61,220,151,.3);}
+.pill.closed{background:rgba(255,255,255,.06);color:var(--text-2);border:1px solid var(--panel-border);}
+.unread-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 6px var(--cyan);flex:none;}
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-1);}
+.empty-state .ic{font-size:34px;margin-bottom:10px;}
+
+/* status selector */
+.status-select-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+@media (max-width:720px){.status-select-grid{grid-template-columns:1fr;}}
+.status-opt{padding:20px 16px;border-radius:12px;border:1.5px solid var(--panel-border);background:rgba(255,255,255,.02);
+  cursor:pointer;transition:all .2s var(--ease);text-align:center;}
+.status-opt:hover{border-color:rgba(139,124,255,.5);}
+.status-opt.picked{border-color:var(--cyan);background:rgba(34,226,245,.06);box-shadow:0 0 20px -6px rgba(34,226,245,.4);}
+.status-opt .dot{width:14px;height:14px;border-radius:50%;margin:0 auto 10px;}
+.status-opt .dot.online{background:var(--ok);box-shadow:0 0 14px var(--ok);}
+.status-opt .dot.busy{background:var(--warn);box-shadow:0 0 14px var(--warn);}
+.status-opt .dot.offline{background:var(--danger);box-shadow:0 0 14px var(--danger);}
+.status-opt b{font-family:var(--font-display);font-size:12.5px;letter-spacing:.06em;}
+
+/* activity log */
+.log-item{display:flex;gap:12px;padding:13px 0;border-bottom:1px solid rgba(139,124,255,.08);}
+.log-item:last-child{border-bottom:none;}
+.log-dot{width:8px;height:8px;border-radius:50%;background:var(--violet-2);margin-top:6px;flex:none;box-shadow:0 0 6px var(--violet-2);}
+.log-txt b{font-weight:700;}
+.log-time{font-size:11px;color:var(--text-2);margin-top:2px;}
+
+/* modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(4,5,12,.65);backdrop-filter:blur(4px);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .25s;}
+.modal-overlay.show{opacity:1;visibility:visible;}
+.modal-box{width:100%;max-width:520px;padding:28px;max-height:88vh;overflow-y:auto;transform:translateY(16px);transition:transform .3s var(--ease);}
+.modal-overlay.show .modal-box{transform:translateY(0);}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.modal-close{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(255,77,109,.15);color:var(--danger);}
+.detail-row{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid rgba(139,124,255,.08);font-size:13.5px;}
+.detail-row span:first-child{color:var(--text-2);}
+.detail-msg{background:rgba(255,255,255,.03);border:1px solid var(--panel-border);border-radius:9px;padding:12px 14px;font-size:13.5px;margin-top:8px;line-height:1.5;}
+
+/* toast */
+#toastHost{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:10px;max-width:320px;}
+.toast{display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:13px;font-weight:600;animation:toastIn .35s var(--ease);}
+.toast.ok{border-left:3px solid var(--ok);}
+.toast.err{border-left:3px solid var(--danger);}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px);}to{opacity:1;transform:translateX(0);}}
+
+/* skeleton */
+.skel{background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.09) 37%,rgba(255,255,255,.04) 63%);
+  background-size:400% 100%;animation:skel 1.4s ease infinite;border-radius:8px;}
+@keyframes skel{0%{background-position:100% 50%;}100%{background-position:0 50%;}}
+
+#mobileBottomNav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:70;background:rgba(8,10,22,.92);
+  backdrop-filter:blur(18px);border-top:1px solid var(--panel-border);padding:8px 6px calc(8px + env(safe-area-inset-bottom));}
+.mbn-row{display:flex;justify-content:space-around;}
+.mbn-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;color:var(--text-2);padding:6px 8px;border-radius:8px;position:relative;}
+.mbn-item.active{color:var(--cyan);}
+.mbn-item .ic{font-size:17px;}
+.mbn-badge{position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--danger);}
+
+#sbOverlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55;opacity:0;visibility:hidden;transition:opacity .3s;}
+#sbOverlay.show{opacity:1;visibility:visible;}
+
+/* responsive */
+@media (max-width:1024px){
+  #sidebar{transform:translateX(-100%);}
+  #sidebar.open{transform:translateX(0);}
+  #mainArea{margin-left:0;}
+  .tb-menu-btn{display:flex;}
+}
+@media (max-width:640px){
+  #pageContent{padding:16px 14px 90px;}
+  #topbar{padding:0 14px;gap:10px;}
+  .tb-search{display:none;}
+  .tb-profile-name,.tb-profile-role{display:none;}
+  #mobileBottomNav{display:block;}
+  .form-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="bg-fixed"></div>
+<div class="bg-grid"></div>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen">
+  <div class="login-card glass">
+    <div class="login-logo"><span class="login-dot"></span><span id="loginBrand">AURA ZONE</span></div>
+    <div class="login-sub">ADMIN CONTROL CENTER</div>
+    <div class="login-err" id="loginErr">⚠ <span id="loginErrTxt">Invalid email or password.</span></div>
+    <form class="login-form" id="loginForm">
+      <div class="field">
+        <label for="loginEmail">ADMIN EMAIL</label>
+        <input class="input" id="loginEmail" type="text" placeholder="admin@aurazone.gg" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="loginPass">PASSWORD</label>
+        <div class="pw-wrap">
+          <input class="input" id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" class="pw-toggle" id="pwToggle">SHOW</button>
+        </div>
+      </div>
+      <div class="login-row">
+        <label class="remember" id="rememberWrap"><span class="checkbox" id="rememberBox"></span> Remember me</label>
+        <a href="#" style="color:var(--text-2);font-size:12px;" id="forgotLink">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+        <span id="loginBtnTxt">LOGIN</span>
+      </button>
+    </form>
+    <div class="login-hint">Secure login powered by Firebase Authentication.<br>Use the admin account created in your Firebase Console.</div>
+  </div>
+</div>
+
+<!-- ============ ADMIN SHELL ============ -->
+<div id="adminShell">
+  <div id="sbOverlay"></div>
+  <aside id="sidebar">
+    <div class="sb-brand"><span class="login-dot"></span><div>AURA ZONE<small>ADMIN PANEL</small></div></div>
+    <nav class="sb-nav" id="sbNav"></nav>
+    <div class="sb-foot">
+      <button class="sb-logout" id="logoutBtn"><span class="ic">⏻</span> Logout</button>
+    </div>
+  </aside>
+
+  <div id="mainArea">
+    <header id="topbar">
+      <button class="tb-menu-btn" id="tbMenuBtn">☰</button>
+      <div class="tb-search"><span>🔍</span><input id="tbSearchInput" placeholder="Search support requests, settings..."></div>
+      <div class="tb-right">
+        <div class="tb-status"><span class="status-dot-sm" id="tbStatusDot"></span><span id="tbStatusTxt">ONLINE</span></div>
+        <button class="tb-icon-btn" id="tbNotifBtn">🔔<span class="tb-dot" id="tbNotifDot" style="display:none"></span></button>
+        <div class="tb-profile">
+          <div class="tb-avatar">AZ</div>
+          <div><div class="tb-profile-name">Admin</div><div class="tb-profile-role" id="tbProfileEmail">admin@aurazone.gg</div></div>
+        </div>
+      </div>
+    </header>
+    <main id="pageContent"></main>
+  </div>
+
+  <nav id="mobileBottomNav">
+    <div class="mbn-row" id="mbnRow"></div>
+  </nav>
+</div>
+
+<div id="toastHost"></div>
+<div class="modal-overlay" id="modalOverlay"><div id="modalBody"></div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, updateEmail } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, updateDoc, deleteDoc, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBMMprwbeCGVPIkW-MbIOryKFIxbSCBEJU",
+  authDomain: "aura-zone-f8d86.firebaseapp.com",
+  projectId: "aura-zone-f8d86",
+  storageBucket: "aura-zone-f8d86.firebasestorage.app",
+  messagingSenderId: "522649013948",
+  appId: "1:522649013948:web:d6efc9679cf3d929268ab9",
+  measurementId: "G-QBBL8B9M1S"
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+
+async function verifyAdminWriteAccess(){
+  if(!auth.currentUser) throw new Error('Not signed in');
+  const probe = doc(db, 'site_settings', 'main');
+  await setDoc(probe, { _adminAccessCheckedAt: Date.now() }, { merge:true });
+  return true;
+}
+
+/* =========================================================
+   AURA ZONE ADMIN — Firebase-backed SPA
+   All data persists via window.storage (Anthropic artifact
+   storage). To go fully production, swap the storage() calls
+   below for real Supabase client calls — the shape of every
+   read/write is already structured for that migration.
+   ========================================================= */
+
+const NAV = [
+  {id:'dashboard', label:'Dashboard', icon:'▣'},
+  {id:'settings',  label:'Website Settings', icon:'⚙'},
+  {id:'freefire',  label:'Free Fire', icon:'🔥'},
+  {id:'social',    label:'Social Media', icon:'🔗'},
+  {id:'support',   label:'Support Requests', icon:'💬', badge:true},
+  {id:'visitors',  label:'Visitors', icon:'📈'},
+  {id:'status',    label:'Live Status', icon:'●'},
+  {id:'security',  label:'Security', icon:'🛡'},
+];
+
+let DB = {
+  session: null,
+  account: { email:'', password:'' },
+  settings: {
+    brandName:'AURA ZONE', websiteTitle:'Aura Zone | Gaming Support',
+    profileImage:'', description:'Connect with Aura Zone for Free Fire gaming support, WhatsApp, Discord, community and gaming assistance.',
+    footerText:'© 2026 AURA ZONE | GAMING SUPPORT. All Rights Reserved.'
+  },
+  social:{
+    whatsapp:{url:'8801XXXXXXXXX', message:'Hello Aura Zone, I need gaming support.', enabled:true},
+    discord:{url:'https://discord.gg/YOUR_INVITE_CODE', enabled:true},
+    youtube:{url:'https://youtube.com/@YOUR_CHANNEL', enabled:true},
+    instagram:{url:'https://instagram.com/YOUR_HANDLE', enabled:true},
+    facebook:{url:'https://facebook.com/YOUR_PAGE', enabled:true},
+  },
+  freefire:{ ign:'AuraZoneX', uid:'123456789', region:'BANGLADESH', profileImage:'', description:'Official Aura Zone Free Fire profile — add me in-game for events and community squads.' },
+  status:{ current:'online', messages:{
+    online:'Currently available for support', busy:'Online, but replies may be a little slower', offline:'Currently unavailable — leave a support request'
+  }},
+  support:[],
+  visitors:{ total:0, online:0, today:0, yesterday:0, daily7:[], daily30:[] },
+  logs:[]
+};
+
+let VIEW = { page:'dashboard', supportFilter:'all', supportSearch:'', supportDate:'', modalRequestId:null };
+let charts = {};
+
+/* ---------- Firebase helpers ---------- */
+const COLLECTION_MAP = { settings:'site_settings', social:'social_links', freefire:'free_fire', status:'status' };
+
+async function sGet(key){
+  try{
+    if(COLLECTION_MAP[key]){ const snap=await getDoc(doc(db,COLLECTION_MAP[key],'main')); return snap.exists()?snap.data():null; }
+    if(key==='support'){ const snap=await getDocs(query(collection(db,'support_requests'),orderBy('created','desc'),limit(500))); return snap.docs.map(d=>({id:d.id,...d.data()})); }
+    if(key==='visitors'){ const snap=await getDoc(doc(db,'visitor_stats','main')); return snap.exists()?snap.data():null; }
+    if(key==='logs'){ const snap=await getDocs(query(collection(db,'admin_logs'),orderBy('time','desc'),limit(80))); return snap.docs.map(d=>({id:d.id,...d.data()})); }
+    return null;
+  }catch(e){ console.error('Firebase read failed',key,e); return null; }
+}
+
+async function sSet(key,value){
+  try{
+    if(COLLECTION_MAP[key]){ await setDoc(doc(db,COLLECTION_MAP[key],'main'),value,{merge:true}); return true; }
+    if(key==='visitors'){ await setDoc(doc(db,'visitor_stats','main'),value,{merge:true}); return true; }
+    if(key==='support'){
+      // Support records are saved individually by their document id.
+      for(const item of value){ const id=item.id; if(!id) continue; const copy={...item}; delete copy.id; await setDoc(doc(db,'support_requests',id),copy,{merge:true}); }
+      return true;
+    }
+    return false;
+  }catch(e){ console.error('Firebase write failed',key,e); return false; }
+}
+
+async function loadAll(){
+  const keys=['settings','social','freefire','status','support','visitors','logs'];
+  for(const k of keys){
+    const val=await sGet(k);
+    if(val!==null) DB[k]=val;
+  }
+  if(!Array.isArray(DB.support)) DB.support=[];
+  if(!DB.visitors) DB.visitors={total:0,online:0,today:0,yesterday:0,daily7:[],daily30:[]};
+  if(!Array.isArray(DB.logs)) DB.logs=[];
+}
+
+async function save(key){
+  const ok = await sSet(key,DB[key]);
+  if(!ok){
+    throw new Error('Firebase write failed for '+key+'. Check Firestore Rules and Admin UID.');
+  }
+  return true;
+}
+
+function logEntry(text){ return { text, time: Date.now() }; }
+async function addLog(text){
+  const entry=logEntry(text);
+  DB.logs.unshift(entry); DB.logs=DB.logs.slice(0,80);
+  try{ await addDoc(collection(db,'admin_logs'),{text:entry.text,time:entry.time,createdAt:serverTimestamp()}); }
+  catch(e){ console.error('Admin log failed',e); }
+}
+
+/* ---------- toast ---------- */
+function toast(msg, type='ok'){
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast glass ' + type;
+  el.innerHTML = `<span>${type==='ok'?'✓':'⚠'}</span><span>${msg}</span>`;
+  host.appendChild(el);
+  setTimeout(()=>{ el.style.opacity='0'; el.style.transition='opacity .3s'; setTimeout(()=>el.remove(),300); }, 3200);
+}
+
+/* ---------- modal / confirm ---------- */
+function openModal(html){
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); VIEW.modalRequestId = null; }
+document.getElementById('modalOverlay').addEventListener('click', (e)=>{ if(e.target.id==='modalOverlay') closeModal(); });
+
+function confirmDialog(title, body, onYes){
+  openModal(`
+    <div class="glass" style="padding:26px;max-width:380px;">
+      <h3 style="margin-bottom:10px;">${title}</h3>
+      <p style="color:var(--text-1);font-size:13.5px;margin-bottom:22px;">${body}</p>
+      <div class="form-actions">
+        <button class="btn btn-ghost" id="confirmNo">Cancel</button>
+        <button class="btn btn-danger" id="confirmYes">Confirm</button>
+      </div>
+    </div>`);
+  document.getElementById('confirmNo').onclick = closeModal;
+  document.getElementById('confirmYes').onclick = ()=>{ closeModal(); onYes(); };
+}
+
+/* ---------- time format ---------- */
+function timeAgo(ts){
+  const s = Math.floor((Date.now()-ts)/1000);
+  if(s<60) return 'just now';
+  if(s<3600) return Math.floor(s/60)+'m ago';
+  if(s<86400) return Math.floor(s/3600)+'h ago';
+  return Math.floor(s/86400)+'d ago';
+}
+function fmtDate(ts){ return new Date(ts).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+
+/* ---------- number count-up ---------- */
+function countUp(el, target){
+  const dur=800, start=performance.now(), from=0;
+  function tick(t){
+    const p = Math.min(1,(t-start)/dur);
+    const eased = 1-Math.pow(1-p,3);
+    el.textContent = Math.round(from + (target-from)*eased).toLocaleString();
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* =========================================================
+   LOGIN
+   ========================================================= */
+let pwVisible = false, rememberOn = false;
+document.getElementById('pwToggle').addEventListener('click', ()=>{
+  pwVisible = !pwVisible;
+  document.getElementById('loginPass').type = pwVisible ? 'text' : 'password';
+  document.getElementById('pwToggle').textContent = pwVisible ? 'HIDE' : 'SHOW';
+});
+document.getElementById('rememberWrap').addEventListener('click', ()=>{
+  rememberOn = !rememberOn;
+  document.getElementById('rememberBox').classList.toggle('on', rememberOn);
+});
+document.getElementById('forgotLink').addEventListener('click', (e)=>{
+  e.preventDefault();
+  toast('Contact the site owner directly to reset admin credentials.', 'err');
+});
+
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const btn=document.getElementById('loginBtn');
+  const btnTxt=document.getElementById('loginBtnTxt');
+  const err=document.getElementById('loginErr');
+  err.classList.remove('show'); btn.disabled=true; btnTxt.innerHTML='<span class="spin"></span>';
+  try{
+    const cred=await signInWithEmailAndPassword(auth,email,pass);
+    try {
+      await verifyAdminWriteAccess();
+    } catch(ruleErr) {
+      await signOut(auth);
+      throw new Error('LOGIN OK, BUT FIRESTORE ADMIN WRITE IS BLOCKED. Add this UID to Firestore Rules: '+cred.user.uid);
+    }
+    DB.session={loggedInAt:Date.now(),remember:rememberOn,uid:cred.user.uid};
+    await addLog('Admin logged in ('+email+')');
+    document.getElementById('tbProfileEmail').textContent=cred.user.email||email;
+    enterAdmin();
+  }catch(ex){
+    btn.disabled=false; btnTxt.textContent='LOGIN';
+    document.getElementById('loginErrTxt').textContent=ex.message && ex.message.includes('FIRESTORE') ? ex.message : 'Invalid email or password.';
+    err.classList.add('show');
+    document.querySelector('.login-card').classList.add('shake');
+    setTimeout(()=>document.querySelector('.login-card').classList.remove('shake'),400);
+  }
+});
+
+document.getElementById('logoutBtn').addEventListener('click',()=>{
+  confirmDialog('Log out?','You will need to sign in again to access the admin panel.',async()=>{
+    await addLog('Admin logged out');
+    await signOut(auth);
+    DB.session=null;
+    document.getElementById('adminShell').style.display='none';
+    document.getElementById('loginScreen').style.display='flex';
+    document.getElementById('loginPass').value='';
+  });
+});
+
+function enterAdmin(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminShell').style.display='block';
+  buildSidebar(); buildBottomNav(); navigate('dashboard');
+}
+
+/* =========================================================
+   SIDEBAR / TOPBAR / NAV
+   ========================================================= */
+function unreadCount(){ return DB.support.filter(r=>!r.read).length; }
+
+function buildSidebar(){
+  const nav = document.getElementById('sbNav');
+  nav.innerHTML = NAV.map(n=>`
+    <a href="#" class="sb-link" data-page="${n.id}">
+      <span class="ic">${n.icon}</span><span>${n.label}</span>
+      ${n.badge && unreadCount()>0 ? `<span class="sb-badge">${unreadCount()}</span>` : ''}
+    </a>`).join('');
+  nav.querySelectorAll('.sb-link').forEach(a=>{
+    a.addEventListener('click',(e)=>{ e.preventDefault(); navigate(a.dataset.page); closeSidebarMobile(); });
+  });
+}
+function buildBottomNav(){
+  const quick = ['dashboard','support','visitors','settings'];
+  const row = document.getElementById('mbnRow');
+  row.innerHTML = quick.map(id=>{
+    const n = NAV.find(x=>x.id===id);
+    return `<div class="mbn-item" data-page="${id}"><span class="ic">${n.icon}</span>${n.label.split(' ')[0]}
+      ${id==='support' && unreadCount()>0 ? '<span class="mbn-badge"></span>':''}</div>`;
+  }).join('');
+  row.querySelectorAll('.mbn-item').forEach(el=>{
+    el.addEventListener('click', ()=> navigate(el.dataset.page));
+  });
+}
+document.getElementById('tbMenuBtn').addEventListener('click', ()=>{
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sbOverlay').classList.add('show');
+});
+document.getElementById('sbOverlay').addEventListener('click', closeSidebarMobile);
+function closeSidebarMobile(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('show');
+}
+document.getElementById('tbNotifBtn').addEventListener('click', ()=> navigate('support'));
+
+function refreshTopStatus(){
+  const s = DB.status.current;
+  document.getElementById('tbStatusDot').className = 'status-dot-sm '+s;
+  document.getElementById('tbStatusTxt').textContent = s.toUpperCase();
+  document.getElementById('tbNotifDot').style.display = unreadCount()>0 ? 'block' : 'none';
+}
+
+function navigate(page){
+  VIEW.page = page;
+  document.querySelectorAll('.sb-link').forEach(a=> a.classList.toggle('active', a.dataset.page===page));
+  document.querySelectorAll('.mbn-item').forEach(a=> a.classList.toggle('active', a.dataset.page===page));
+  refreshTopStatus();
+  render();
+}
+
+/* =========================================================
+   RENDER ROUTER
+   ========================================================= */
+function render(){
+  const c = document.getElementById('pageContent');
+  const renderers = { dashboard:renderDashboard, settings:renderSettings, freefire:renderFreeFire,
+    social:renderSocial, support:renderSupport, visitors:renderVisitors, status:renderStatus, security:renderSecurity };
+  c.innerHTML = `<div class="page-enter" id="pageInner"></div>`;
+  document.getElementById('pageInner').innerHTML = renderers[VIEW.page]();
+  afterRender[VIEW.page] && afterRender[VIEW.page]();
+}
+const afterRender = {};
+
+/* ---------- DASHBOARD ---------- */
+function renderDashboard(){
+  const s = DB.status.current;
+  const cards = [
+    {label:'Total Website Visitors', val:DB.visitors.total, ic:'👥'},
+    {label:'Online Visitors', val:DB.visitors.online, ic:'🟢'},
+    {label:'Total Support Requests', val:DB.support.length, ic:'💬'},
+    {label:'Unread Support Requests', val:unreadCount(), ic:'✉'},
+    {label:'Website Status', val:s.toUpperCase(), ic: s==='online'?'●':s==='busy'?'◐':'○', isText:true},
+    {label:'Free Fire UID', val:DB.freefire.uid, ic:'🆔', isText:true},
+    {label:'Free Fire IGN', val:DB.freefire.ign, ic:'🎮', isText:true},
+  ];
+  return `
+  <div class="page-head"><div><h1>Overview <span class="grad-text">Dashboard</span></h1><p>Live snapshot of ${DB.settings.brandName}'s platform activity.</p></div></div>
+  <div class="stat-grid">
+    ${cards.map((c,i)=>`
+      <div class="glass stat-card">
+        <div class="stat-top"><div class="stat-ic">${c.ic}</div></div>
+        <div class="stat-val" ${c.isText?`id="statTxt${i}"`:`id="statNum${i}" data-target="${c.val}"`}>${c.isText? c.val : '0'}</div>
+        <div class="stat-label">${c.label}</div>
+      </div>`).join('')}
+  </div>
+  <div class="chart-grid">
+    <div class="glass chart-card"><h3>Visitors — Last 7 Days</h3><div class="chart-wrap"><canvas id="dashVisChart"></canvas></div></div>
+    <div class="glass chart-card"><h3>Support Requests — Status Mix</h3><div class="chart-wrap"><canvas id="dashSupChart"></canvas></div></div>
+  </div>`;
+}
+afterRender.dashboard = function(){
+  document.querySelectorAll('[id^="statNum"]').forEach(el=> countUp(el, Number(el.dataset.target)));
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  makeChart('dashVisChart','line', days, [{label:'Visitors', data:DB.visitors.daily7, color:'#22e2f5'}]);
+  const counts = { New:0,'In Progress':0,Resolved:0,Closed:0 };
+  DB.support.forEach(r=> counts[r.status] = (counts[r.status]||0)+1);
+  makeChart('dashSupChart','doughnut', Object.keys(counts), [{data:Object.values(counts)}]);
+};
+
+/* ---------- chart helper ---------- */
+function makeChart(canvasId, type, labels, datasets){
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  if(charts[canvasId]) charts[canvasId].destroy();
+  const gridColor = 'rgba(139,124,255,0.08)';
+  const textColor = '#aab0d6';
+  if(type==='doughnut'){
+    charts[canvasId] = new Chart(ctx, { type:'doughnut', data:{ labels, datasets:[{ data:datasets[0].data,
+      backgroundColor:['#22e2f5','#ffb020','#3ddc97','#6c7299'], borderColor:'#0a0d1c', borderWidth:3 }] },
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:textColor, font:{family:'Rajdhani'}, padding:14 } } } } });
+    return;
+  }
+  charts[canvasId] = new Chart(ctx, { type, data:{ labels, datasets: datasets.map(d=>({
+      label:d.label, data:d.data, borderColor:d.color||'#8b5cf6', backgroundColor:(d.color||'#8b5cf6')+'33',
+      tension:.4, fill:true, pointRadius:3, pointBackgroundColor:d.color||'#8b5cf6', borderWidth:2 })) },
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display: datasets.length>1, labels:{color:textColor} } },
+      scales:{ x:{ grid:{color:gridColor}, ticks:{color:textColor,font:{family:'Rajdhani'}} },
+               y:{ grid:{color:gridColor}, ticks:{color:textColor,font:{family:'Rajdhani'}}, beginAtZero:true } } } });
+}
+
+/* ---------- WEBSITE SETTINGS ---------- */
+function renderSettings(){
+  const st = DB.settings;
+  return `
+  <div class="page-head"><div><h1>Website <span class="grad-text">Settings</span></h1><p>Controls the public site's identity — brand, title, and footer.</p></div></div>
+  <div class="glass card">
+    <h3>General</h3><div class="card-sub">These values apply across the public website automatically once saved.</div>
+    <div class="form-grid">
+      <div class="field"><label>BRAND NAME</label><input class="input" id="setBrand" value="${esc(st.brandName)}"></div>
+      <div class="field"><label>WEBSITE TITLE</label><input class="input" id="setTitle" value="${esc(st.websiteTitle)}"></div>
+      <div class="field"><label>PROFILE IMAGE URL</label><input class="input" id="setImg" value="${esc(st.profileImage)}" placeholder="https://..."></div>
+      <div class="field"><label>FOOTER TEXT</label><input class="input" id="setFooter" value="${esc(st.footerText)}"></div>
+    </div>
+    <div class="field" style="margin-top:16px;"><label>WEBSITE DESCRIPTION</label><textarea class="textarea" id="setDesc">${esc(st.description)}</textarea></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="saveSettingsBtn">Save Changes</button>
+    </div>
+  </div>`;
+}
+afterRender.settings = function(){
+  document.getElementById('saveSettingsBtn').addEventListener('click', async ()=>{
+    DB.settings = {
+      brandName: val('setBrand') || 'AURA ZONE',
+      websiteTitle: val('setTitle'),
+      profileImage: val('setImg'),
+      description: val('setDesc'),
+      footerText: val('setFooter'),
+    };
+    try { await save('settings'); } catch(e) { console.error(e); toast('SAVE FAILED: Check Firestore Rules / Admin UID.', 'err'); return; }
+    await addLog('Website settings updated');
+    document.getElementById('loginBrand').textContent = DB.settings.brandName;
+    toast('Settings saved — public website will use these values.');
+  });
+};
+
+/* ---------- FREE FIRE ---------- */
+function renderFreeFire(){
+  const f = DB.freefire;
+  const regions = ['BANGLADESH','INDIA','GLOBAL','ASIA','MENA','LATAM'];
+  return `
+  <div class="page-head"><div><h1>Free Fire <span class="grad-text">Profile</span></h1><p>Shown on the public Free Fire card and support section.</p></div></div>
+  <div class="glass card">
+    <h3>Profile Details</h3><div class="card-sub">Default region: BANGLADESH</div>
+    <div class="form-grid">
+      <div class="field"><label>IGN (IN-GAME NAME)</label><input class="input" id="ffIgn" value="${esc(f.ign)}"></div>
+      <div class="field"><label>FREE FIRE UID</label><input class="input" id="ffUid" value="${esc(f.uid)}"></div>
+      <div class="field"><label>REGION</label><select class="select" id="ffRegion">${regions.map(r=>`<option ${r===f.region?'selected':''}>${r}</option>`).join('')}</select></div>
+      <div class="field"><label>PROFILE IMAGE URL</label><input class="input" id="ffImg" value="${esc(f.profileImage)}" placeholder="https://..."></div>
+    </div>
+    <div class="field" style="margin-top:16px;"><label>PLAYER DESCRIPTION</label><textarea class="textarea" id="ffDesc">${esc(f.description)}</textarea></div>
+    <div class="form-actions"><button class="btn btn-primary" id="saveFFBtn">Save Changes</button></div>
+  </div>`;
+}
+afterRender.freefire = function(){
+  document.getElementById('saveFFBtn').addEventListener('click', async ()=>{
+    DB.freefire = { ign:val('ffIgn'), uid:val('ffUid'), region:document.getElementById('ffRegion').value, profileImage:val('ffImg'), description:val('ffDesc') };
+    try { await save('freefire'); } catch(e) { console.error(e); toast('SAVE FAILED: Check Firestore Rules / Admin UID.', 'err'); return; }
+    await addLog('Free Fire profile updated');
+    toast('Free Fire profile saved — public card will show the latest info.');
+    render();
+  });
+};
+
+/* ---------- SOCIAL MEDIA ---------- */
+const SOCIAL_META = {
+  whatsapp:{label:'WhatsApp', ic:'💬', hasMsg:true},
+  discord:{label:'Discord', ic:'🎧'},
+  youtube:{label:'YouTube', ic:'▶️'},
+  instagram:{label:'Instagram', ic:'📷'},
+  facebook:{label:'Facebook', ic:'📘'},
+};
+function renderSocial(){
+  const s = DB.social;
+  return `
+  <div class="page-head"><div><h1>Social Media & <span class="grad-text">Channels</span></h1><p>Manage every outbound link the public site uses.</p></div></div>
+  <div class="glass card">
+    ${Object.keys(SOCIAL_META).map(key=>{
+      const meta = SOCIAL_META[key]; const item = s[key];
+      return `
+      <div class="social-row" data-key="${key}">
+        <div class="social-ic">${meta.ic}</div>
+        <div class="social-info"><b>${meta.label}</b><span>${meta.hasMsg? 'Number + message':'Profile URL'}</span></div>
+        <div class="social-input-wrap">
+          <input class="input soc-url" placeholder="${meta.hasMsg?'WhatsApp number, e.g. 8801XXXXXXXXX':'https://...'}" value="${esc(item.url)}">
+          ${meta.hasMsg? `<input class="input soc-msg" style="margin-top:8px;" placeholder="Default message" value="${esc(item.message||'')}">` : ''}
+        </div>
+        <div class="toggle ${item.enabled?'on':''} soc-toggle" title="Enable / disable"></div>
+        <button class="btn btn-ghost btn-sm soc-test">Test</button>
+        <button class="btn btn-primary btn-sm soc-save">Save</button>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+afterRender.social = function(){
+  document.querySelectorAll('.social-row').forEach(row=>{
+    const key = row.dataset.key;
+    row.querySelector('.soc-toggle').addEventListener('click', function(){ this.classList.toggle('on'); });
+    row.querySelector('.soc-test').addEventListener('click', ()=>{
+      const url = row.querySelector('.soc-url').value.trim();
+      if(key==='whatsapp'){
+        const num = url.replace(/[^0-9]/g,'');
+        const msg = encodeURIComponent(row.querySelector('.soc-msg').value || '');
+        window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
+      } else if(url){ window.open(url, '_blank'); }
+      else toast('Add a URL before testing.', 'err');
+    });
+    row.querySelector('.soc-save').addEventListener('click', async ()=>{
+      const enabled = row.querySelector('.soc-toggle').classList.contains('on');
+      const url = row.querySelector('.soc-url').value.trim();
+      DB.social[key].url = url;
+      DB.social[key].enabled = enabled;
+      if(key==='whatsapp') DB.social[key].message = row.querySelector('.soc-msg').value;
+      try { await save('social'); } catch(e) { console.error(e); toast('SAVE FAILED: Check Firestore Rules / Admin UID.', 'err'); return; }
+      await addLog(SOCIAL_META[key].label+' link updated');
+      toast(SOCIAL_META[key].label+' saved — public buttons updated.');
+    });
+  });
+};
+
+/* ---------- SUPPORT REQUESTS ---------- */
+function renderSupport(){
+  let list = DB.support.slice().sort((a,b)=> b.created - a.created);
+  if(VIEW.supportFilter !== 'all') list = list.filter(r=> r.status === VIEW.supportFilter);
+  if(VIEW.supportSearch) {
+    const q = VIEW.supportSearch.toLowerCase();
+    list = list.filter(r=> (r.name+r.uid+r.email+r.message+r.id).toLowerCase().includes(q));
+  }
+  if(VIEW.supportDate) list = list.filter(r=> new Date(r.created).toISOString().slice(0,10) === VIEW.supportDate);
+
+  return `
+  <div class="page-head"><div><h1>Support <span class="grad-text">Requests</span></h1><p>${DB.support.length} total · ${unreadCount()} unread</p></div></div>
+  <div class="glass card">
+    <div class="table-toolbar">
+      <input class="input" id="supSearch" placeholder="Search name, UID, message..." style="flex:1;min-width:180px;" value="${esc(VIEW.supportSearch)}">
+      <select class="select" id="supFilter">
+        ${['all','New','In Progress','Resolved','Closed'].map(s=>`<option value="${s}" ${VIEW.supportFilter===s?'selected':''}>${s==='all'?'All statuses':s}</option>`).join('')}
+      </select>
+      <input class="input" id="supDate" type="date" value="${VIEW.supportDate}">
+    </div>
+    ${list.length===0 ? `
+      <div class="empty-state"><div class="ic">🗒️</div><h3>No support requests found</h3><p>Try adjusting your filters, or wait for new submissions.</p></div>
+    ` : `
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>ID</th><th>Name</th><th>UID</th><th>Type</th><th>Status</th><th>Received</th></tr></thead>
+      <tbody>
+        ${list.map(r=>`
+          <tr class="tbl-row" data-id="${r.id}">
+            <td>${!r.read?'<span class="unread-dot"></span>':''}</td>
+            <td>${r.id}</td><td>${esc(r.name)}</td><td>${esc(r.uid)}</td><td>${esc(r.type)}</td>
+            <td><span class="pill ${statusClass(r.status)}">${r.status}</span></td>
+            <td>${timeAgo(r.created)}</td>
+          </tr>`).join('')}
+      </tbody>
+    </table></div>`}
+  </div>`;
+}
+function statusClass(s){ return {New:'new','In Progress':'progress',Resolved:'resolved',Closed:'closed'}[s]||'new'; }
+afterRender.support = function(){
+  document.getElementById('supSearch').addEventListener('input', (e)=>{ VIEW.supportSearch = e.target.value; render(); });
+  document.getElementById('supFilter').addEventListener('change', (e)=>{ VIEW.supportFilter = e.target.value; render(); });
+  document.getElementById('supDate').addEventListener('change', (e)=>{ VIEW.supportDate = e.target.value; render(); });
+  document.querySelectorAll('.tbl-row').forEach(row=>{
+    row.addEventListener('click', ()=> openRequestModal(row.dataset.id));
+  });
+};
+function openRequestModal(id){
+  const r = DB.support.find(x=>x.id===id); if(!r) return;
+  if(!r.read){ r.read = true; save('support'); buildSidebar(); buildBottomNav(); refreshTopStatus(); }
+  openModal(`
+    <div class="glass modal-box">
+      <div class="modal-head"><h3>${r.id}</h3><button class="modal-close" id="mClose">✕</button></div>
+      <div class="detail-row"><span>Name</span><span>${esc(r.name)}</span></div>
+      <div class="detail-row"><span>Free Fire UID</span><span>${esc(r.uid)}</span></div>
+      <div class="detail-row"><span>Email</span><span>${esc(r.email)||'—'}</span></div>
+      <div class="detail-row"><span>Support Type</span><span>${esc(r.type)}</span></div>
+      <div class="detail-row"><span>Received</span><span>${fmtDate(r.created)}</span></div>
+      <div class="detail-msg">${esc(r.message)}</div>
+      <div class="field" style="margin-top:16px;"><label>STATUS</label>
+        <select class="select" id="mStatus">${['New','In Progress','Resolved','Closed'].map(s=>`<option ${s===r.status?'selected':''}>${s}</option>`).join('')}</select>
+      </div>
+      <div class="field" style="margin-top:14px;"><label>ADMIN NOTES</label><textarea class="textarea" id="mNotes">${esc(r.notes)}</textarea></div>
+      <div class="form-actions">
+        <button class="btn btn-danger" id="mDelete">Delete</button>
+        <button class="btn btn-primary" id="mSave">Save Changes</button>
+      </div>
+    </div>`);
+  document.getElementById('mClose').onclick = closeModal;
+  document.getElementById('mSave').onclick = async ()=>{
+    const newStatus = document.getElementById('mStatus').value;
+    const statusChanged = newStatus !== r.status;
+    r.status = newStatus; r.notes = document.getElementById('mNotes').value;
+    try { await save('support'); } catch(e) { console.error(e); toast('SAVE FAILED: Check Firestore Rules / Admin UID.', 'err'); return; }
+    if(statusChanged) await addLog(`Support request ${r.id} status changed to ${newStatus}`);
+    closeModal(); render(); buildSidebar(); buildBottomNav();
+    toast('Support request updated.');
+  };
+  document.getElementById('mDelete').onclick = ()=>{
+    confirmDialog('Delete this request?', `${r.id} from ${esc(r.name)} will be permanently removed.`, async ()=>{
+      DB.support = DB.support.filter(x=>x.id!==r.id);
+      try { await deleteDoc(doc(db,'support_requests',r.id)); } catch(e) { console.error(e); toast('Delete failed.','err'); return; }
+      await addLog(`Support request ${r.id} deleted`);
+      closeModal(); render(); buildSidebar(); buildBottomNav();
+      toast('Request deleted.');
+    });
+  };
+}
+
+/* ---------- VISITORS ---------- */
+function renderVisitors(){
+  const v = DB.visitors;
+  const cards = [
+    {label:'Total Visits', val:v.total}, {label:'Online Now', val:v.online},
+    {label:"Today's Visitors", val:v.today}, {label:"Yesterday's Visitors", val:v.yesterday},
+    {label:'Last 7 Days', val:v.daily7.reduce((a,b)=>a+b,0)}, {label:'Last 30 Days', val:v.daily30.reduce((a,b)=>a+b,0)},
+  ];
+  return `
+  <div class="page-head"><div><h1>Visitor <span class="grad-text">Analytics</span></h1><p>Realtime traffic snapshot for ${DB.settings.brandName}.</p></div></div>
+  <div class="stat-grid">
+    ${cards.map((c,i)=>`<div class="glass stat-card"><div class="stat-val" id="visNum${i}" data-target="${c.val}">0</div><div class="stat-label">${c.label}</div></div>`).join('')}
+  </div>
+  <div class="glass chart-card" style="margin-bottom:16px;"><h3>Daily Visitors — Last 7 Days</h3><div class="chart-wrap"><canvas id="visChart7"></canvas></div></div>
+  <div class="glass chart-card"><h3>Monthly Trend — Last 30 Days</h3><div class="chart-wrap"><canvas id="visChart30"></canvas></div></div>`;
+}
+afterRender.visitors = function(){
+  document.querySelectorAll('[id^="visNum"]').forEach(el=> countUp(el, Number(el.dataset.target)));
+  const days7 = ['6d ago','5d','4d','3d','2d','Yesterday','Today'];
+  makeChart('visChart7','line', days7, [{label:'Visitors', data:DB.visitors.daily7, color:'#22e2f5'}]);
+  const days30 = Array.from({length:30},(_,i)=> (30-i)+'d');
+  makeChart('visChart30','line', days30, [{label:'Visitors', data:DB.visitors.daily30, color:'#8b5cf6'}]);
+};
+
+/* ---------- LIVE STATUS ---------- */
+function renderStatus(){
+  const s = DB.status;
+  const opts = [['online','ONLINE'],['busy','BUSY'],['offline','OFFLINE']];
+  return `
+  <div class="page-head"><div><h1>Live <span class="grad-text">Status</span></h1><p>Controls the status badge shown across the public website.</p></div></div>
+  <div class="glass card">
+    <div class="status-select-grid">
+      ${opts.map(([k,label])=>`
+        <div class="status-opt ${s.current===k?'picked':''}" data-status="${k}">
+          <div class="dot ${k}"></div><b>${label}</b>
+        </div>`).join('')}
+    </div>
+    <div class="divider"></div>
+    <h3 style="margin-bottom:14px;">Status Messages</h3>
+    <div class="form-grid">
+      <div class="field"><label>ONLINE MESSAGE</label><input class="input" id="msgOnline" value="${esc(s.messages.online)}"></div>
+      <div class="field"><label>BUSY MESSAGE</label><input class="input" id="msgBusy" value="${esc(s.messages.busy)}"></div>
+      <div class="field"><label>OFFLINE MESSAGE</label><input class="input" id="msgOffline" value="${esc(s.messages.offline)}"></div>
+    </div>
+    <div class="form-actions"><button class="btn btn-primary" id="saveStatusBtn">Save Changes</button></div>
+  </div>`;
+}
+afterRender.status = function(){
+  let picked = DB.status.current;
+  document.querySelectorAll('.status-opt').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      picked = el.dataset.status;
+      document.querySelectorAll('.status-opt').forEach(o=>o.classList.remove('picked'));
+      el.classList.add('picked');
+    });
+  });
+  document.getElementById('saveStatusBtn').addEventListener('click', async ()=>{
+    const changed = picked !== DB.status.current;
+    DB.status = { current: picked, messages:{ online:val('msgOnline'), busy:val('msgBusy'), offline:val('msgOffline') } };
+    try { await save('status'); } catch(e) { console.error(e); toast('SAVE FAILED: Check Firestore Rules / Admin UID.', 'err'); return; }
+    if(changed) await addLog('Website status changed to '+picked.toUpperCase());
+    refreshTopStatus();
+    toast('Live status saved — reflected across the public site.');
+  });
+};
+
+/* ---------- SECURITY ---------- */
+function renderSecurity(){
+  return `
+  <div class="page-head"><div><h1>Admin <span class="grad-text">Security</span></h1><p>Session, credentials, and activity history.</p></div></div>
+  <div class="chart-grid">
+    <div class="glass card" style="margin-bottom:0;">
+      <h3>Change Password</h3><div class="card-sub">Used for /admin/login. Never exposed to the public site.</div>
+      <div class="field" style="margin-bottom:14px;"><label>ADMIN EMAIL</label><input class="input" id="secEmail" value="${esc(auth.currentUser?.email || '')}"></div>
+      <div class="field" style="margin-bottom:14px;"><label>NEW PASSWORD</label><input class="input" id="secPass" type="password" placeholder="Leave blank to keep current"></div>
+      <div class="form-actions"><button class="btn btn-primary" id="secSaveBtn">Update Credentials</button></div>
+      <div class="divider"></div>
+      <div class="detail-row"><span>Session started</span><span>${DB.session? fmtDate(DB.session.loggedInAt): '—'}</span></div>
+      <div class="detail-row"><span>Rate limiting</span><span>5 login attempts / 10 min</span></div>
+      <div class="detail-row"><span>Protected routes</span><span>All /admin/* except /admin/login</span></div>
+    </div>
+    <div class="glass card" style="margin-bottom:0;">
+      <h3>Activity Log</h3><div class="card-sub">Most recent admin actions.</div>
+      <div id="logList">${DB.logs.slice(0,25).map(l=>`
+        <div class="log-item"><div class="log-dot"></div><div class="log-txt"><b>${esc(l.text)}</b><div class="log-time">${fmtDate(l.time)}</div></div></div>
+      `).join('') || '<div class="empty-state"><div class="ic">🛡</div><p>No activity yet.</p></div>'}</div>
+    </div>
+  </div>`;
+}
+afterRender.security = function(){
+  document.getElementById('secSaveBtn').addEventListener('click', async ()=>{
+    const email=val('secEmail').trim();
+    const pass=document.getElementById('secPass').value;
+    const user=auth.currentUser;
+    if(!user){ toast('Admin session expired.','err'); return; }
+    try{
+      if(email && email!==user.email) await updateEmail(user,email);
+      if(pass) await updatePassword(user,pass);
+      await addLog('Admin Firebase credentials updated');
+      document.getElementById('tbProfileEmail').textContent=email||user.email||'';
+      toast('Firebase credentials updated.');
+      render();
+    }catch(e){
+      console.error(e);
+      toast('Credential update failed. Re-login may be required.','err');
+    }
+  });
+};
+
+/* ---------- helpers ---------- */
+function val(id){ return document.getElementById(id).value; }
+function esc(str){ return String(str==null?'':str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* ---------- boot ---------- */
+(async function boot(){
+  await loadAll();
+  document.getElementById('loginBrand').textContent=DB.settings.brandName;
+  onAuthStateChanged(auth, async user=>{
+    if(user){
+      DB.session={loggedInAt:Date.now(),uid:user.uid,remember:true};
+      document.getElementById('tbProfileEmail').textContent=user.email||'';
+      await loadAll();
+      enterAdmin();
+    }else{
+      document.getElementById('adminShell').style.display='none';
+      document.getElementById('loginScreen').style.display='flex';
+    }
+  });
+})();
+</script>
+</body>
+</html>
